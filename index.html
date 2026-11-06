@@ -1,0 +1,1924 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stakely — Investor Portal Demo</title>
+<meta name="description" content="Stakely is an investor relations portal for private companies: a public company page, an invite-only data room, a shareholder dashboard, a board room and an admin console. Demo with a fictional company.">
+<meta name="theme-color" content="#1C2B4A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Stakely">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231C2B4A'/%3E%3Cpath d='M20 42c4 4 20 4 22-3 2-8-20-6-19-15 1-7 15-7 20-2' stroke='%23C8892E' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#1C2B4A; --navy-2:#24365C; --navy-deep:#141F36;
+  --gold:#C8892E; --gold-2:#B57A25; --gold-soft:#F3E3C8;
+  --sand:#F4EFE6; --paper:#FBF8F3; --white:#FFFFFF;
+  --mist:#8A97A8; --ink:#16202F; --ink-2:#3E4A5C; --line:#E4DCCD; --line-2:#EDE7DC;
+  --ok:#4F7A5A; --ok-soft:#E3EEE5; --bad:#A84B3A; --bad-soft:#F6E2DD; --info-soft:#E4E9F2;
+  --serif:"Cormorant Garamond","Noto Serif SC","Songti SC",Georgia,serif;
+  --sans:"Inter","PingFang SC","Microsoft YaHei","Noto Sans SC",system-ui,-apple-system,sans-serif;
+  --r:14px; --shadow:0 1px 2px rgba(20,31,54,.04),0 8px 28px rgba(20,31,54,.06);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:var(--sans);color:var(--ink);background:var(--sand);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+h1,h2,h3{font-family:var(--serif);font-weight:600;line-height:1.08;margin:0;letter-spacing:-.01em}
+p{margin:0}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+.eyebrow{font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:600}
+.muted{color:var(--mist)}
+.small{font-size:13px}
+.serif{font-family:var(--serif)}
+.hide{display:none!important}
+
+/* demo bar */
+.demobar{background:var(--navy-deep);color:#C9D1DD;font-size:12.5px;padding:8px 0;position:relative;z-index:30}
+.demobar .wrap{display:flex;gap:16px;align-items:center;justify-content:space-between;flex-wrap:wrap}
+.demobar b{color:#fff;font-weight:600}
+.demobar a{color:var(--gold);text-decoration:none;font-weight:600}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:999px;padding:12px 22px;font-weight:600;font-size:14px;cursor:pointer;text-decoration:none;transition:.18s;white-space:nowrap}
+.btn-gold{background:var(--gold);color:#fff}.btn-gold:hover{background:var(--gold-2)}
+.btn-navy{background:var(--navy);color:#fff}.btn-navy:hover{background:var(--navy-2)}
+.btn-ghost{background:transparent;border-color:rgba(255,255,255,.45);color:#fff}.btn-ghost:hover{background:rgba(255,255,255,.1)}
+.btn-line{background:#fff;border-color:var(--line);color:var(--ink)}.btn-line:hover{border-color:var(--navy)}
+.btn-sm{padding:8px 14px;font-size:13px}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.lang{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:12.5px;font-weight:600;cursor:pointer}
+.lang.dark{background:transparent;border-color:rgba(255,255,255,.35);color:#fff}
+
+/* ---------- PUBLIC ---------- */
+.pnav{position:absolute;top:0;left:0;right:0;z-index:20}
+.pnav .wrap{display:flex;align-items:center;justify-content:space-between;height:84px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+.mark{width:38px;height:38px;border-radius:50%;border:1.5px solid currentColor;display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:17px;letter-spacing:.02em}
+.brand .nm{font-family:var(--serif);font-size:23px;font-weight:600;line-height:1;white-space:nowrap}
+.brand .sub{font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.75;margin-top:3px}
+.pnav .brand{color:#fff}
+.pnav ul{display:flex;gap:30px;list-style:none;margin:0;padding:0}
+.pnav ul a{color:#fff;text-decoration:none;font-size:14px;opacity:.88}
+.pnav ul a:hover{opacity:1}
+.pnav .right{display:flex;align-items:center;gap:12px}
+.hero{position:relative;min-height:94vh;display:flex;align-items:flex-end;color:#fff;background:var(--navy) center/cover no-repeat}
+.hero:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,31,54,.92) 0%,rgba(28,43,74,.72) 42%,rgba(28,43,74,.18) 100%),linear-gradient(0deg,rgba(20,31,54,.55),rgba(20,31,54,0) 40%)}
+.hero>.wrap{position:relative;width:100%;padding-top:180px;padding-bottom:84px}
+.hero h1{font-size:clamp(48px,7.4vw,104px);max-width:820px;margin:18px 0 22px;font-weight:600}
+.hero h1 em{font-style:italic;color:var(--gold-soft)}
+.hero p.lead{font-size:clamp(17px,1.6vw,20px);max-width:560px;opacity:.88}
+.hero .ctas{display:flex;gap:14px;margin-top:36px;flex-wrap:wrap}
+.hero .facts{display:flex;gap:56px;margin-top:72px;padding-top:28px;border-top:1px solid rgba(255,255,255,.18);flex-wrap:wrap}
+.hero .facts b{display:block;font-family:var(--serif);font-size:44px;font-weight:600;line-height:1}
+.hero .facts span{font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;opacity:.7}
+.sec{padding:128px 0}
+.sec.alt{background:var(--paper)}
+.sec h2{font-size:clamp(38px,4.6vw,62px);margin:16px 0 22px}
+.sec .lead{font-size:18px;color:var(--ink-2);max-width:620px}
+.split{display:grid;grid-template-columns:1.05fr 1fr;gap:88px;align-items:center}
+.split.rev{grid-template-columns:1fr 1.05fr}
+.split .img{border-radius:6px;overflow:hidden;aspect-ratio:4/5;background:var(--line)}
+.split .img img{width:100%;height:100%;object-fit:cover}
+.values{display:grid;gap:26px;margin-top:40px}
+.values>div{display:grid;grid-template-columns:44px 1fr;gap:14px}
+.values .n{font-family:var(--serif);font-size:30px;color:var(--gold);line-height:1}
+.values h3{font-size:24px;margin-bottom:4px}
+.values p{color:var(--ink-2)}
+.stores{display:grid;gap:0;margin-top:36px;border-top:1px solid var(--line)}
+.stores .row{display:grid;grid-template-columns:1fr auto;padding:20px 0;border-bottom:1px solid var(--line);align-items:center}
+.stores .row b{font-family:var(--serif);font-size:25px;font-weight:600}
+.stores .row span{color:var(--mist);font-size:13.5px}
+.stores .next b{color:var(--gold)}
+.road{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:72px;border-top:1px solid var(--line)}
+.road div{padding:26px 24px 0 0}
+.road b{display:block;font-family:var(--serif);font-size:54px;line-height:1;color:var(--navy)}
+.road span{font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--mist)}
+.road div.now b{color:var(--gold)}
+.team{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:56px}
+.person{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:30px}
+.avatar{width:58px;height:58px;border-radius:50%;background:var(--navy);color:var(--gold-soft);display:grid;place-items:center;font-family:var(--serif);font-size:22px;font-weight:600;flex:none}
+.person h3{font-size:26px;margin:20px 0 2px}
+.person .role{color:var(--gold);font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+.person p{color:var(--ink-2);margin-top:12px;font-size:14.5px}
+.teamimg{margin-top:56px;border-radius:6px;overflow:hidden;aspect-ratio:21/8}
+.teamimg img{width:100%;height:100%;object-fit:cover}
+.news{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;margin-top:52px}
+.news article{border-top:2px solid var(--navy);padding-top:22px}
+.news time{font-size:12.5px;color:var(--mist);letter-spacing:.06em}
+.news h3{font-size:26px;margin:10px 0 10px}
+.news p{color:var(--ink-2);font-size:14.5px}
+.faq{margin-top:44px;border-top:1px solid var(--line)}
+.faq details{border-bottom:1px solid var(--line);padding:22px 0}
+.faq summary{cursor:pointer;list-style:none;font-family:var(--serif);font-size:24px;font-weight:600;display:flex;justify-content:space-between;gap:20px}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary:after{content:"+";color:var(--gold);font-family:var(--sans);font-weight:400}
+.faq details[open] summary:after{content:"–"}
+.faq details p{color:var(--ink-2);margin-top:12px;max-width:760px}
+.interest{background:var(--navy);color:#fff}
+.interest .lead{color:#C9D1DD}
+.formcard{background:#fff;color:var(--ink);border-radius:var(--r);padding:36px;box-shadow:0 30px 60px rgba(0,0,0,.25)}
+.field{display:grid;gap:6px;margin-bottom:16px}
+.field label{font-size:12.5px;font-weight:600;color:var(--ink-2);letter-spacing:.02em}
+.field input,.field select,.field textarea{border:1px solid var(--line);border-radius:10px;padding:12px 14px;background:var(--paper);outline:none;width:100%}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--gold);background:#fff}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--ink-2);margin:6px 0 18px}
+.check input{margin-top:4px;accent-color:var(--gold)}
+.disc{font-size:12px;color:var(--mist);margin-top:14px;line-height:1.55}
+.pfoot{background:var(--navy-deep);color:#93A0B4;padding:56px 0;font-size:13px}
+.pfoot .wrap{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:flex-start}
+.pfoot .brand{color:#fff}
+.pfoot p{max-width:520px;margin-top:14px}
+.pfoot a{color:var(--gold);text-decoration:none}
+
+/* ---------- LOGIN ---------- */
+.login{min-height:calc(100vh - 36px);display:grid;grid-template-columns:1fr 1.1fr}
+.login .art{position:relative;background:var(--navy) center/cover;color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:48px}
+.login .art:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,31,54,.86),rgba(28,43,74,.66) 50%,rgba(20,31,54,.92))}
+.login .art>*{position:relative}
+.login .art h1{font-size:clamp(40px,4.4vw,64px);margin:18px 0 18px}
+.login .art p{opacity:.85;max-width:440px}
+.login .pick{padding:56px clamp(24px,5vw,72px);background:var(--paper);overflow:auto}
+.login .pick h2{font-size:40px;margin:10px 0 8px}
+.roles{display:grid;gap:12px;margin-top:30px}
+.rolecard{display:grid;grid-template-columns:48px 1fr auto;gap:16px;align-items:center;text-align:left;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:18px 20px;cursor:pointer;transition:.18s;width:100%}
+.rolecard:hover{border-color:var(--gold);transform:translateY(-1px);box-shadow:var(--shadow)}
+.rolecard .ic{width:48px;height:48px;border-radius:12px;background:var(--sand);display:grid;place-items:center;color:var(--navy)}
+.rolecard b{display:block;font-size:15.5px;color:var(--ink)}
+.rolecard span{display:block;font-size:13px;color:var(--mist);margin-top:2px}
+.rolecard .go{color:var(--gold);font-weight:700}
+.prodlogin{margin-top:28px;border:1px dashed var(--line);border-radius:var(--r);padding:18px 20px;font-size:13px;color:var(--ink-2);display:flex;gap:12px;align-items:flex-start}
+
+/* ---------- PORTAL SHELL ---------- */
+.shell{display:grid;grid-template-columns:268px 1fr;min-height:calc(100vh - 36px)}
+.side{background:var(--navy);color:#C9D1DD;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow:auto}
+.side .top{padding:26px 22px 18px;border-bottom:1px solid rgba(255,255,255,.08)}
+.side .brand{color:#fff}
+.side .area{margin-top:18px;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold)}
+.side nav{padding:14px 12px;display:grid;gap:2px}
+.side nav a{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;text-decoration:none;font-size:14px;color:#C9D1DD}
+.side nav a:hover{background:rgba(255,255,255,.06);color:#fff}
+.side nav a.on{background:rgba(200,137,46,.16);color:#fff}
+.side nav a.on svg{color:var(--gold)}
+.side nav .grp{font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:#6F7E96;padding:16px 12px 6px}
+.side nav .badge{margin-left:auto;background:var(--gold);color:#fff;font-size:11px;font-weight:700;border-radius:999px;padding:1px 7px}
+.side .me{margin-top:auto;padding:18px 20px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:12px;align-items:center}
+.side .me .avatar{width:40px;height:40px;font-size:16px;background:var(--gold);color:#fff}
+.side .me b{color:#fff;font-size:14px;display:block}
+.side .me span{font-size:12px}
+.side .acts{display:flex;gap:8px;padding:0 20px 22px}
+.side .acts .btn{flex:1;padding:8px 10px;font-size:12.5px;border-color:rgba(255,255,255,.2);color:#fff;background:transparent}
+.side .acts .btn:hover{background:rgba(255,255,255,.08)}
+.mainp{min-width:0}
+.topbar{height:72px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 36px;border-bottom:1px solid var(--line);background:rgba(244,239,230,.92);backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+.topbar h1{font-size:28px}
+.topbar .r{display:flex;gap:10px;align-items:center}
+.menu-btn{display:none;border:1px solid var(--line);background:#fff;border-radius:10px;width:40px;height:40px;place-items:center;cursor:pointer}
+.content{padding:32px 36px 64px;max-width:1240px}
+.co-banner{display:flex;gap:18px;align-items:center;justify-content:space-between;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px 20px;margin-bottom:24px;flex-wrap:wrap}
+.co-banner .l{display:flex;gap:14px;align-items:center}
+.co-banner .mark{color:var(--navy)}
+.co-banner b{font-family:var(--serif);font-size:21px}
+.notice{display:flex;gap:12px;align-items:flex-start;background:var(--gold-soft);border-radius:12px;padding:14px 16px;font-size:13.5px;color:#6B4A17;margin-bottom:22px}
+.notice.navy{background:var(--info-soft);color:var(--navy)}
+.notice.red{background:var(--bad-soft);color:#7A3226}
+
+/* cards & grids */
+.grid{display:grid;gap:20px}
+.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.g-21{grid-template-columns:minmax(0,2fr) minmax(0,1fr)}
+.card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px;min-width:0}
+.card h3{font-family:var(--sans);font-size:16.5px;font-weight:600;letter-spacing:-.005em}
+.card .hd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+.card .hd .link{font-size:13px;color:var(--gold);font-weight:600;cursor:pointer;text-decoration:none}
+.kpi .lbl{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);font-weight:600}
+.kpi .val{font-family:var(--sans);font-size:30px;font-weight:650;line-height:1.15;margin-top:6px;color:var(--navy);letter-spacing:-.02em;font-variant-numeric:tabular-nums lining-nums}
+.kpi .sub{font-size:13px;color:var(--ink-2);margin-top:4px}
+.up{color:var(--ok)!important}.down{color:var(--bad)!important}
+.kpi.feature{background:var(--navy);border-color:var(--navy);color:#fff}
+.kpi.feature .val{color:#fff}.kpi.feature .lbl{color:var(--gold)}.kpi.feature .sub{color:#C9D1DD}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--sand);color:var(--ink-2);white-space:nowrap}
+.chip.ok{background:var(--ok-soft);color:var(--ok)}
+.chip.bad{background:var(--bad-soft);color:var(--bad)}
+.chip.gold{background:var(--gold-soft);color:#7A5418}
+.chip.navy{background:var(--info-soft);color:var(--navy)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block;flex:none}
+
+/* tables */
+.tblw{overflow-x:auto;margin:0 -4px}
+.tbl{width:100%;border-collapse:collapse;font-size:14px}
+.tbl th{text-align:left;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mist);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tbl td{padding:13px 12px;border-bottom:1px solid var(--line-2);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:0}
+.tbl .num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.tbl tr.tot td{font-weight:700;border-top:1px solid var(--line)}
+.tbl tr.you td{background:#FBF5EA}
+
+/* lists */
+.list{display:grid}
+.item{display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;padding:14px 0;border-bottom:1px solid var(--line-2)}
+.item:last-child{border-bottom:0}
+.item .t{font-weight:600}
+.item .m{font-size:12.5px;color:var(--mist)}
+.fileic{width:40px;height:40px;border-radius:10px;background:var(--sand);display:grid;place-items:center;color:var(--navy)}
+
+/* progress */
+.bar{height:8px;background:var(--line-2);border-radius:999px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:999px}
+.bar.navy i{background:var(--navy)}
+.bar.ok i{background:var(--ok)}
+
+/* chart */
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:18px;font-size:12.5px;color:var(--ink-2);margin-top:10px;flex-wrap:wrap}
+.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+
+/* tabs */
+.tabs{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px;margin-bottom:22px;gap:2px;flex-wrap:wrap}
+.tabs button{border:0;background:transparent;border-radius:999px;padding:8px 18px;font-weight:600;font-size:13.5px;cursor:pointer;color:var(--ink-2)}
+.tabs button.on{background:var(--navy);color:#fff}
+
+/* report */
+.letter{font-size:15.5px;color:var(--ink-2)}
+.letter p{margin-bottom:14px}
+.letter h4{font-family:var(--serif);font-size:22px;color:var(--ink);margin:22px 0 8px}
+.wl{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:18px 0}
+.wl div{border-radius:12px;padding:16px 18px}
+.wl .w{background:var(--ok-soft)}.wl .l{background:var(--bad-soft)}
+.wl b{display:block;margin-bottom:6px;font-size:13px;letter-spacing:.08em;text-transform:uppercase}
+.wl ul{margin:0;padding-left:18px;font-size:14px}
+.sign{font-family:var(--serif);font-size:24px;color:var(--navy);margin-top:6px}
+
+/* qa */
+.thread{border:1px solid var(--line);border-radius:var(--r);padding:20px;background:#fff;margin-bottom:14px}
+.thread .q{font-weight:600;font-size:15.5px}
+.thread .meta{font-size:12.5px;color:var(--mist);margin-top:4px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.thread .a{margin-top:14px;padding:14px 16px;background:var(--paper);border-radius:12px;border:1px solid var(--line-2);font-size:14.5px;color:var(--ink-2)}
+.thread .a b{color:var(--ink)}
+
+/* vote */
+.vopts{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.vopts button{flex:1;min-width:110px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:14px;font-weight:600;cursor:pointer}
+.vopts button:hover{border-color:var(--navy)}
+.vopts button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.tally{display:grid;gap:10px;margin-top:16px}
+.tally .r{display:grid;grid-template-columns:72px 1fr 48px;gap:10px;align-items:center;font-size:13px}
+
+/* kanban */
+.kanban{display:grid;grid-template-columns:repeat(5,minmax(200px,1fr));gap:14px;overflow-x:auto;padding-bottom:8px}
+.col{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);padding:12px;min-height:300px}
+.col h4{margin:4px 4px 12px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);display:flex;justify-content:space-between}
+.col h4 span{color:var(--mist)}
+.kc{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;font-size:13.5px}
+.kc b{display:block}
+.kc .amt{font-family:var(--serif);font-size:21px;color:var(--navy);font-weight:600}
+.kc .row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.kc button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:3px 9px;font-size:12px;cursor:pointer}
+.kc button:hover{border-color:var(--gold);color:var(--gold)}
+.kc.new{border-color:var(--gold);box-shadow:0 0 0 3px rgba(200,137,46,.15)}
+
+/* perm matrix */
+.perm td.c{text-align:center}
+.tog{width:38px;height:22px;border-radius:999px;background:var(--line);position:relative;border:0;cursor:pointer;vertical-align:middle}
+.tog:after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:#fff;transition:.18s}
+.tog.on{background:var(--ok)}.tog.on:after{left:19px}
+
+/* deck */
+.slide{aspect-ratio:16/9;border-radius:var(--r);background:var(--navy);color:#fff;padding:clamp(22px,4vw,52px);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden}
+.slide.img{background:center/cover}
+.slide.img:before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(20,31,54,.9),rgba(20,31,54,.35))}
+.slide>*{position:relative}
+.slide h3{font-size:clamp(26px,3.6vw,48px);max-width:720px}
+.slide .bul{display:grid;gap:8px;font-size:clamp(13px,1.3vw,16px);color:#D9DFE8;max-width:640px}
+.slide .pg{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.slide .stats{display:flex;gap:clamp(18px,4vw,48px);flex-wrap:wrap}
+.slide .stats b{display:block;font-family:var(--serif);font-size:clamp(28px,3.6vw,46px);line-height:1}
+.slide .stats span{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#AEB9C9}
+.deckctl{display:flex;justify-content:space-between;align-items:center;margin-top:16px;gap:12px}
+.dots{display:flex;gap:6px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--gold)}
+
+/* slots */
+.slots{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.slots .day b{display:block;font-family:var(--serif);font-size:22px;margin-bottom:10px}
+.slots button{display:block;width:100%;margin-bottom:8px;border:1px solid var(--line);background:#fff;border-radius:10px;padding:10px;cursor:pointer;font-weight:600}
+.slots button:hover{border-color:var(--gold)}
+.slots button.on{background:var(--gold);border-color:var(--gold);color:#fff}
+
+/* gate */
+.gate{max-width:640px;margin:20px auto}
+.gate .card{padding:40px}
+.gate h2{font-size:40px;margin:12px 0 10px}
+
+/* modal & toast */
+.ov{position:fixed;inset:0;background:rgba(20,31,54,.55);display:grid;place-items:center;z-index:100;padding:20px;animation:fade .15s}
+.modal{background:#fff;border-radius:18px;max-width:720px;width:100%;max-height:88vh;overflow:auto;padding:30px;position:relative}
+.modal .x{position:absolute;top:14px;right:14px;border:0;background:var(--sand);width:34px;height:34px;border-radius:50%;cursor:pointer;font-size:18px}
+.modal h3{font-size:30px;margin-bottom:6px}
+.docprev{position:relative;border:1px solid var(--line);border-radius:12px;padding:34px 34px 46px;margin-top:18px;background:var(--paper);overflow:hidden;min-height:340px}
+.docprev .ln{height:10px;background:var(--line);border-radius:4px;margin-bottom:12px}
+.docprev .wm{position:absolute;inset:-40%;display:flex;flex-wrap:wrap;align-content:center;justify-content:center;gap:60px 80px;transform:rotate(-24deg);pointer-events:none}
+.docprev .wm span{font-size:15px;font-weight:700;color:rgba(28,43,74,.13);white-space:nowrap;letter-spacing:.06em}
+#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:13px 20px;border-radius:12px;font-size:14px;opacity:0;transition:.25s;z-index:200;pointer-events:none;max-width:90vw;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+#toast.show{opacity:1;transform:translateX(-50%)}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+.foot-note{font-size:12px;color:var(--mist);margin-top:36px;padding-top:18px;border-top:1px solid var(--line)}
+
+
+/* ---------- v2: clarity layer ---------- */
+.num,.tbl td,.tbl th{font-variant-numeric:tabular-nums lining-nums}
+.content{max-width:1280px}
+.topbar .tt{display:flex;flex-direction:column;justify-content:center}
+.topbar .tsub{font-size:12px;color:var(--mist);margin-top:1px;display:flex;gap:6px;align-items:center}
+.topbar .tsub i{width:7px;height:7px;border-radius:50%;background:var(--ok);display:inline-block}
+.pagehd{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.pagehd h2{font-size:38px;margin-top:6px}
+.sechd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:0 0 12px;flex-wrap:wrap}
+.sechd h3{font-family:var(--sans);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);font-weight:700}
+.sechd span{font-size:12.5px;color:var(--mist)}
+.card{border-color:var(--line-2);box-shadow:0 1px 2px rgba(20,31,54,.03)}
+.card .hd span.sub2{font-size:12.5px;color:var(--mist)}
+.kpi .kt{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kpi .lbl{display:inline-flex;align-items:center;gap:6px;font-size:11.5px}
+.kpi .kv{display:flex;justify-content:space-between;align-items:flex-end;gap:10px}
+.kpi .kv svg{flex:none;margin-bottom:6px}
+.kpi .sub{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12.5px;color:var(--mist)}
+.delta{display:inline-flex;align-items:center;font-size:12px;font-weight:700;border-radius:6px;padding:1px 7px;background:var(--sand);color:var(--ink-2)}
+.delta.up{background:var(--ok-soft);color:var(--ok)!important}
+.delta.down{background:var(--bad-soft);color:var(--bad)!important}
+.st{display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;white-space:nowrap}
+.st i{width:8px;height:8px;border-radius:50%;display:inline-block}
+.st.ok{color:var(--ok)}.st.ok i{background:var(--ok)}
+.st.watch{color:#9A6A1C}.st.watch i{background:var(--gold)}
+.st.bad{color:var(--bad)}.st.bad i{background:var(--bad)}
+.st.pill{padding:4px 10px;border-radius:999px;background:var(--ok-soft)}
+.st.pill.watch{background:var(--gold-soft)}.st.pill.bad{background:var(--bad-soft)}
+.tip{width:17px;height:17px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--mist);font-size:10.5px;font-weight:700;line-height:1;display:inline-grid;place-items:center;cursor:pointer;padding:0;vertical-align:1px;flex:none;text-transform:none;letter-spacing:0}
+.tip:hover{border-color:var(--gold);color:var(--gold)}
+.summary{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:0;background:var(--navy);color:#fff;border-radius:18px;overflow:hidden;margin-bottom:28px}
+.summary .sl{padding:30px 32px}
+.summary .big{font-family:var(--serif);font-size:clamp(24px,2.4vw,32px);line-height:1.25;margin:12px 0 20px;font-weight:600}
+.summary .sr{background:rgba(255,255,255,.05);padding:22px 26px;display:grid;align-content:center;gap:2px;border-left:1px solid rgba(255,255,255,.08)}
+.summary .srow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px;color:#D9DFE8}
+.summary .srow:last-child{border-bottom:0}
+.summary .st.ok{color:#9FD3AE}.summary .st.ok i{background:#7CC290}
+.summary .st.watch{color:#F0C783}.summary .st.watch i{background:var(--gold)}
+.ivrow{display:grid;grid-template-columns:1fr auto 1fr 1fr;gap:18px;align-items:end;margin:6px 0 18px}
+.ivrow .lbl{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mist);font-weight:600;display:flex;gap:6px;align-items:center}
+.numl{font-size:28px;font-weight:650;letter-spacing:-.02em;color:var(--ink);margin-top:4px;font-variant-numeric:tabular-nums}
+.numl.navy{color:var(--navy)}
+.ivrow .arr{color:var(--mist);font-size:22px;padding-bottom:6px}
+.cmp{display:grid;gap:8px;margin-bottom:16px}
+.cmp .r{display:grid;grid-template-columns:92px 1fr 90px;gap:10px;align-items:center;font-size:12.5px;color:var(--ink-2)}
+.cmp .r b{text-align:right;font-variant-numeric:tabular-nums}
+.cmp .trk{height:10px;background:var(--line-2);border-radius:999px;overflow:hidden}
+.cmp .trk i{display:block;height:100%;border-radius:999px}
+.metaline{display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--mist);padding-top:14px;border-top:1px solid var(--line-2)}
+.metaline b{color:var(--ink);font-weight:600}
+.act{display:grid;grid-template-columns:26px 1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--line-2)}
+.act:last-child{border-bottom:0}
+.act .ck{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center}
+.act.done .ck{background:var(--ok);border-color:var(--ok);color:#fff}
+.act .t{font-size:14px;font-weight:600}
+.act.done .t{color:var(--mist);text-decoration:line-through;font-weight:500}
+.act .m{font-size:12px;color:var(--mist)}
+.act .m.soon{color:#9A6A1C;font-weight:600}
+.progress-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.ytd{position:relative;height:12px;background:var(--line-2);border-radius:999px;margin:10px 0 6px}
+.ytd i{position:absolute;left:0;top:0;bottom:0;background:var(--navy);border-radius:999px}
+.ytd em{position:absolute;top:-5px;bottom:-5px;width:2px;background:var(--gold)}
+.chart .cscroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.chart .cscroll svg{min-width:600px}
+.score td:first-child{font-weight:600}
+.score td .why{display:block;font-weight:400;font-size:12px;color:var(--mist);margin-top:2px}
+.score .bad-t{color:var(--bad);font-weight:600}.score .good-t{color:var(--ok);font-weight:600}
+.scoresum{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px;font-size:14px}
+.stack{display:flex;height:30px;border-radius:8px;overflow:hidden;margin:6px 0 4px}
+.stack i{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;font-style:normal;white-space:nowrap;overflow:hidden}
+.stackleg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2);margin-top:12px}
+.stackleg span{display:inline-flex;align-items:center;gap:6px}.stackleg em{width:10px;height:10px;border-radius:3px;display:inline-block}
+.scard{display:grid;gap:14px}
+.scard .top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.scard h4{font-family:var(--serif);font-size:24px;margin:0;font-weight:600}
+.mini{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding-top:14px;border-top:1px solid var(--line-2)}
+.mini b{display:block;font-size:18px;font-weight:650;font-variant-numeric:tabular-nums}
+.mini span{font-size:11.5px;color:var(--mist);text-transform:uppercase;letter-spacing:.06em}
+.thesis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1px solid var(--line-2)}
+.thesis>div{padding:20px 22px 20px 0;border-bottom:1px solid var(--line-2)}
+.thesis>div:nth-child(odd){padding-right:28px;border-right:1px solid var(--line-2)}
+.thesis>div:nth-child(even){padding-left:28px}
+.thesis .n{font-family:var(--serif);color:var(--gold);font-size:22px}
+.thesis h4{font-family:var(--sans);font-size:15.5px;margin:4px 0 6px}
+.thesis p{font-size:14px;color:var(--ink-2)}
+.risk{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr);gap:16px;padding:14px 0;border-bottom:1px solid var(--line-2);font-size:14px}
+.risk:last-child{border-bottom:0}
+.risk b{display:flex;gap:8px;align-items:flex-start}
+.risk span{color:var(--ink-2)}
+.snap{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));background:#fff;border:1px solid var(--line-2);border-radius:var(--r);margin-bottom:24px}
+.snap>div{padding:18px 20px;border-right:1px solid var(--line-2)}
+.snap>div:last-child{border-right:0}
+.snap .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mist);font-weight:600;display:flex;gap:6px;align-items:center}
+.snap b{display:block;font-size:22px;font-weight:650;color:var(--navy);margin-top:4px;font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.snap small{font-size:12px;color:var(--mist)}
+.gloss h3{font-family:var(--serif)}
+.gloss .ex{background:var(--paper);border:1px solid var(--line-2);border-radius:12px;padding:14px 16px;margin-top:14px;font-size:14px;color:var(--ink-2)}
+@media (max-width:1080px){
+  .summary{grid-template-columns:1fr}.summary .sr{border-left:0;border-top:1px solid rgba(255,255,255,.08)}
+  .snap{grid-template-columns:repeat(3,minmax(0,1fr))}.snap>div:nth-child(3){border-right:0}.snap>div:nth-child(-n+3){border-bottom:1px solid var(--line-2)}
+}
+@media (max-width:640px){
+  .summary .sl{padding:22px 20px}.summary .sr{padding:14px 20px}
+  .ivrow{grid-template-columns:1fr 1fr}.ivrow .arr{display:none}
+  .numl{font-size:22px}
+  .thesis{grid-template-columns:1fr}.thesis>div{padding:16px 0!important;border-right:0!important}
+  .risk{grid-template-columns:1fr;gap:4px}
+  .snap{grid-template-columns:1fr 1fr}.snap>div{border-right:0;border-bottom:1px solid var(--line-2)}
+  .mini b{font-size:16px}
+  .kpi .kv svg{display:none}
+  .hm{display:none}
+  .score .st{font-size:0;gap:0}
+  .score td:first-child{min-width:140px}
+  .kpi .kt .st{display:none}
+  .pagehd h2{font-size:30px}
+  .topbar .tsub{display:none}
+}
+
+@media (min-width:861px){.shell{background:linear-gradient(90deg,var(--navy) 268px,transparent 268px)}}
+
+/* ---------- v3: interactive layer ---------- */
+.since{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:#fff;border:1px solid var(--line-2);border-radius:14px;padding:10px 14px;margin-bottom:22px}
+.since .lb{display:inline-flex;gap:6px;align-items:center;font-size:12.5px;font-weight:700;color:var(--ink-2);margin-right:4px}
+.since a{display:inline-flex;align-items:center;gap:6px;font-size:13px;text-decoration:none;color:var(--ink);background:var(--paper);border:1px solid var(--line-2);border-radius:999px;padding:5px 12px;transition:.15s}
+.since a:hover{border-color:var(--gold);color:var(--gold-2)}
+.since a b{color:var(--ok)}
+.seg{display:inline-flex;background:var(--paper);border:1px solid var(--line-2);border-radius:10px;padding:3px;gap:2px;flex-wrap:wrap}
+.seg button{border:0;background:transparent;border-radius:8px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--ink-2);cursor:pointer}
+.seg button.on{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(20,31,54,.12)}
+.trend-ctl{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.trend-sum{font-size:13.5px;color:var(--ink-2);margin-bottom:10px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;min-height:22px}
+.trend-sum b{font-size:22px;color:var(--navy);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.cbox{position:relative;width:100%}
+.donut-wrap{display:grid;grid-template-columns:200px 1fr;gap:22px;align-items:center}
+.donut-c{position:relative;height:200px}
+.donut-c .ctr{position:absolute;inset:0;display:grid;place-items:center;text-align:center;pointer-events:none}
+.donut-c .ctr b{display:block;font-size:22px;color:var(--navy);font-variant-numeric:tabular-nums}
+.donut-c .ctr span{font-size:11.5px;color:var(--mist);text-transform:uppercase;letter-spacing:.08em}
+.mixleg{display:grid;gap:2px}
+.mixleg div{display:grid;grid-template-columns:12px 1fr auto auto;gap:10px;align-items:center;font-size:13.5px;padding:7px 0;border-bottom:1px solid var(--line-2)}
+.mixleg div:last-child{border-bottom:0}
+.mixleg i{width:12px;height:12px;border-radius:3px}
+.mixleg b{font-variant-numeric:tabular-nums}
+.mixleg span.m{color:var(--mist);font-variant-numeric:tabular-nums;font-size:12.5px;min-width:52px;text-align:right}
+.heat{display:grid;grid-template-columns:44px repeat(12,minmax(0,1fr));gap:4px;font-size:11.5px}
+.heat .hh{color:var(--mist);text-align:center}
+.heat .dd{color:var(--ink-2);font-weight:600;display:flex;align-items:center}
+.heat .c{aspect-ratio:1.45;border-radius:5px;transition:transform .15s}
+.heat .c:hover{transform:scale(1.15);outline:2px solid var(--gold);z-index:2}
+.heatleg{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mist);margin-top:12px}
+.heatleg .g{height:8px;width:140px;border-radius:999px;background:linear-gradient(90deg,rgba(28,43,74,.06),rgba(28,43,74,1))}
+.mapwrap{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:0;border:1px solid var(--line-2);border-radius:var(--r);overflow:hidden;background:#fff}
+.mapwrap #mapsvg svg{display:block;width:100%;height:auto;background:#F7F3EC}
+.mapinfo{padding:22px;border-left:1px solid var(--line-2);display:flex;flex-direction:column;gap:12px;min-height:100%}
+.mapinfo .ph{border-radius:10px;overflow:hidden;aspect-ratio:16/9;background:var(--sand)}
+.mapinfo .ph img{width:100%;height:100%;object-fit:cover}
+.mapinfo h4{font-family:var(--serif);font-size:26px;margin:0;font-weight:600}
+.pin{cursor:pointer}
+.pin:focus{outline:none}
+.pin .hit{fill:transparent}
+.pin:hover .dotc,.pin.sel .dotc{stroke:#C8892E;stroke-width:4}
+.pin.sel .lbl2{font-weight:700;fill:#1C2B4A}
+.pulse{animation:pulse 2s ease-out infinite;transform-box:fill-box;transform-origin:center}
+@keyframes pulse{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+.maplegend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--ink-2)}
+.maplegend span{display:inline-flex;gap:6px;align-items:center}
+.maplegend em{width:11px;height:11px;border-radius:50%;display:inline-block}
+.simgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:20px;margin-bottom:20px}
+.sl-row{margin-bottom:22px}
+.sl-row .top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:8px}
+.sl-row label{font-size:13.5px;font-weight:600;display:flex;gap:6px;align-items:center}
+.sl-row output{font-size:20px;font-weight:700;color:var(--navy);font-variant-numeric:tabular-nums}
+.sl-row .ends{display:flex;justify-content:space-between;font-size:11.5px;color:var(--mist);margin-top:4px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:999px;background:var(--line-2);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--gold);box-shadow:0 2px 6px rgba(20,31,54,.2)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--gold)}
+.switch{display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--paper);border:1px solid var(--line-2);border-radius:12px;padding:14px 16px;cursor:pointer}
+.switch input{position:absolute;opacity:0;width:0;height:0}
+.switch .tg{width:44px;height:26px;border-radius:999px;background:var(--line);position:relative;flex:none;transition:.2s}
+.switch .tg:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch input:checked+.tg{background:var(--ok)}.switch input:checked+.tg:after{left:21px}
+.switch input:focus-visible+.tg{outline:2px solid var(--gold);outline-offset:2px}
+.formula{font-size:13px;color:var(--ink-2);background:var(--paper);border-radius:10px;padding:10px 12px;margin-top:16px;font-variant-numeric:tabular-nums}
+.simout{display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:0;border-bottom:1px solid var(--line-2);padding-bottom:18px;margin-bottom:16px}
+.simout>div{padding-right:16px}
+.simout .lbl{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mist);font-weight:600}
+.simout .big{font-size:42px;font-weight:700;color:var(--navy);letter-spacing:-.02em;font-variant-numeric:tabular-nums;line-height:1.1;margin-top:4px}
+.simout .mid{font-size:26px;font-weight:700;letter-spacing:-.01em;font-variant-numeric:tabular-nums;margin-top:8px}
+.photos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.photo{position:relative;border-radius:12px;overflow:hidden;aspect-ratio:4/3;cursor:pointer;border:0;padding:0;background:var(--sand);text-align:left}
+.photo img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.photo:hover img{transform:scale(1.05)}
+.photo .cap{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 12px;background:linear-gradient(0deg,rgba(20,31,54,.88),rgba(20,31,54,0));color:#fff;font-size:13px;line-height:1.35}
+.photo .cap small{display:block;color:#E9C88E;font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.lightbox img{width:100%;border-radius:12px;margin-top:14px}
+.flowcap{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--ink-2);margin-top:10px}
+@media (max-width:1080px){
+  .simgrid{grid-template-columns:1fr}
+  .mapwrap{grid-template-columns:1fr}.mapinfo{border-left:0;border-top:1px solid var(--line-2)}
+  .photos{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:640px){
+  .donut-wrap{grid-template-columns:1fr}
+  .heat{grid-template-columns:30px repeat(12,minmax(0,1fr));gap:2px;font-size:9.5px}
+  .simout{grid-template-columns:1fr 1fr}.simout>div:first-child{grid-column:1/-1;margin-bottom:10px}
+  .simout .big{font-size:34px}
+  .since{padding:10px}
+  .tabs{display:flex;flex-wrap:nowrap;overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch}
+  .tabs button{flex:none}
+  .photos{gap:10px}
+}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none}.photo img{transition:none}}
+
+/* responsive */
+@media (max-width:1080px){
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g-21{grid-template-columns:1fr}
+  .split,.split.rev{grid-template-columns:1fr;gap:48px}
+  .split .img{aspect-ratio:16/11}
+  .pnav ul{display:none}
+}
+@media (max-width:860px){
+  .shell{grid-template-columns:1fr}
+  .side{position:fixed;left:0;top:0;bottom:0;width:282px;z-index:60;transform:translateX(-100%);transition:.22s}
+  body.nav-open .side{transform:none;box-shadow:0 0 0 100vmax rgba(20,31,54,.5)}
+  .menu-btn{display:grid}
+  .topbar{padding:0 16px;height:64px}
+  .topbar h1{font-size:22px}
+  .content{padding:20px 16px 56px}
+  .login{grid-template-columns:1fr}
+  .login .art{min-height:300px;padding:32px 20px}
+  .login .pick{padding:32px 16px}
+  .team,.news{grid-template-columns:1fr}
+  .road{grid-template-columns:repeat(2,1fr)}
+  .slots{grid-template-columns:1fr}
+  .wl{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .sec{padding:88px 0}
+  .hero .facts{gap:28px}
+  .hero .facts b{font-size:36px}
+  .pnav .right .lang{display:none}
+  .formcard{padding:24px}
+  .gate .card{padding:26px}
+  .modal{padding:22px}
+  .kpi .val{font-size:28px}
+  .topbar .r .chip{display:none}
+  .ovr,.newsimg,.replyg{grid-template-columns:1fr!important}
+  .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .kpi .val{font-size:24px}
+  .kpi{padding:16px}
+  .pnav .brand .sub{display:none}
+  .pnav .brand .nm{font-size:20px}
+  .demobar .long{display:none}
+  .ovr>div:last-child{min-height:180px!important}
+  .newsimg>div:first-child{min-height:200px}
+  .tabs button{padding:8px 14px}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="modal"></div>
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="assets/chart.umd.min.js"></script>
+
+<script>
+/* ============================================================
+   Stakely — investor portal demo (fictional data)
+   ============================================================ */
+const IMG = {hero:'assets/hero.jpg', store:'assets/storefront.jpg', build:'assets/construction.jpg', flat:'assets/flatlay.jpg', team:'assets/team.jpg'};
+
+const DB = {
+  get(k,d){ try{ const v = localStorage.getItem('stakely_'+k); return v===null ? d : JSON.parse(v); }catch(e){ return d; } },
+  set(k,v){ try{ localStorage.setItem('stakely_'+k, JSON.stringify(v)); }catch(e){} },
+  clear(){ try{ Object.keys(localStorage).filter(k=>k.startsWith('stakely_')).forEach(k=>localStorage.removeItem(k)); }catch(e){} }
+};
+const S = {
+  lang: DB.get('lang','en'),
+  role: DB.get('role',null),
+  perfTab: 'ops', deck: 0, report: null, slot: null, metric: 'rev', range: '12m', pin: null
+};
+const L = (en,zh) => S.lang==='zh' ? zh : en;
+const T = o => o==null ? '' : (typeof o==='string' ? o : (S.lang==='zh' ? o.zh : o.en));
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money = (n,d=0) => '$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:d,maximumFractionDigits:d});
+const kM = n => n>=1e6 ? '$'+(n/1e6).toFixed(2).replace(/\.?0+$/,'')+'M' : '$'+Math.round(n/1e3)+'K';
+const num = n => Number(n).toLocaleString('en-US');
+const pct = (n,d=1) => (n*100).toFixed(d)+'%';
+const TODAY = '2026-11-04';
+const fdate = iso => { const d=new Date(iso+'T12:00:00'); return S.lang==='zh' ? `${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日` : d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); };
+
+/* ---------------- icons ---------------- */
+const ICP = {
+  home:'M3 11l9-8 9 8M5 9.5V21h5v-6h4v6h5V9.5',
+  chart:'M4 20V10M10 20V4M16 20v-7M22 20H2',
+  report:'M7 3h8l4 4v14H7zM15 3v4h4M10 12h6M10 16h6',
+  bell:'M6 8a6 6 0 1112 0c0 7 3 8 3 8H3s3-1 3-8M10 21h4',
+  chat:'M21 12a8 8 0 01-11.6 7.1L4 21l1.9-5.4A8 8 0 1121 12z',
+  file:'M6 3h9l5 5v13H6zM14 3v6h6',
+  cal:'M4 5h16v16H4zM4 10h16M9 3v4M15 3v4',
+  pie:'M12 3v9h9A9 9 0 1112 3zM15 3.5A9 9 0 0120.5 9H15z',
+  shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',
+  users:'M9 11a4 4 0 100-8 4 4 0 000 8zM2 21c0-4 3-6 7-6s7 2 7 6M16 3.5a4 4 0 010 7.5M22 21c0-3-1.6-5-4.5-5.7',
+  layers:'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5M3 17l9 5 9-5',
+  kanban:'M4 4h4v16H4zM10 4h4v10h-4zM16 4h4v13h-4z',
+  send:'M22 2L11 13M22 2l-7 20-4-9-9-4z',
+  inbox:'M3 13l3-9h12l3 9v7H3zM3 13h5l1 3h6l1-3h5',
+  eye:'M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12zM12 15a3 3 0 100-6 3 3 0 000 6z',
+  lock:'M6 11h12v10H6zM8 11V7a4 4 0 018 0v4',
+  play:'M6 4l14 8-14 8z',
+  phone:'M5 3h4l2 5-2.5 1.5a11 11 0 006 6L16 13l5 2v4a2 2 0 01-2 2A17 17 0 013 5a2 2 0 012-2z',
+  globe:'M12 21a9 9 0 100-18 9 9 0 000 18zM3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18',
+  key:'M15 7a4 4 0 11-3.5 6L4 20.5V17h3v-3h3l1.5-1.5A4 4 0 0115 7z',
+  gavel:'M14 4l6 6M11 7l6 6M8 10l6 6M3 21l7-7',
+  menu:'M3 6h18M3 12h18M3 18h18',
+  out:'M15 3h4v18h-4M10 17l5-5-5-5M15 12H3',
+  swap:'M7 4L3 8l4 4M3 8h14M17 20l4-4-4-4M21 16H7',
+  check:'M4 12l5 5L20 6',
+  arrow:'M5 12h14M13 6l6 6-6 6',
+  money:'M2 6h20v12H2zM12 15a3 3 0 100-6 3 3 0 000 6zM6 9v6M18 9v6',
+  store:'M3 9l2-5h14l2 5M4 9v11h16V9M3 9h18M9 20v-6h6v6',
+  sliders:'M4 6h9M17 6h3M4 12h3M11 12h9M4 18h11M19 18h1M15 4v4M9 10v4M17 16v4',
+  map:'M9 4l6 2 6-2v14l-6 2-6-2-6 2V6zM9 4v14M15 6v14',
+  image:'M3 5h18v14H3zM3 16l5-5 4 4 3-3 6 6M15.5 9.5a1.5 1.5 0 100-.01'
+};
+const ic = (n,s=18) => `<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="${ICP[n]||''}"/></svg>`;
+
+/* ---------------- company data (fictional) ---------------- */
+const CO = {name:'Hearth & Grain', full:'Hearth & Grain Bakery Café', city:'Austin, Texas', mark:'H&G'};
+const MLBL = {en:['Nov','Dec','Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct'], zh:['11月','12月','1月','2月','3月','4月','5月','6月','7月','8月','9月','10月']};
+const PLAN = [405,440,380,375,395,400,410,405,395,400,410,420];   // $K
+const ACT  = [412,452,371,382,362,409,421,398,401,413,416,431];   // $K  TTM = 4,868
+const TTM = ACT.reduce((a,b)=>a+b,0), TTMP = PLAN.reduce((a,b)=>a+b,0);
+const SHARES_OUT = 11764706;
+const PRICE = {ff:0.40, angel:0.85, a:1.70};
+
+const STORES = [
+  {n:'South Congress', y:2021, rev:1860, tx:352, m:.142},
+  {n:'Mueller', y:2023, rev:1620, tx:311, m:.118},
+  {n:'The Domain', y:2024, rev:1388, tx:268, m:.081}
+];
+const QTRS = [
+  {q:'Q1 2026', rev:1115, cogs:362, lab:398, occ:120, oth:225, cash:1040},
+  {q:'Q2 2026', rev:1228, cogs:393, lab:410, occ:120, oth:229, cash:1080},
+  {q:'Q3 2026', rev:1230, cogs:387, lab:405, occ:120, oth:232, cash:1120}
+];
+const MY = { // Daniel Chen
+  pos:[
+    {r:{en:'Friends & Family · 2023',zh:'亲友轮 · 2023'}, inv:100000, sh:250000, p:PRICE.ff, type:{en:'Common',zh:'普通股'}, d:'2023-04-18'},
+    {r:{en:'Angel · 2024',zh:'天使轮 · 2024'}, inv:50000, sh:58824, p:PRICE.angel, type:{en:'Common',zh:'普通股'}, d:'2024-06-03'}
+  ]
+};
+
+const HOLDERS = {
+  investor: MY.pos,
+  director: [{r:{en:'Angel · 2024',zh:'天使轮 · 2024'}, inv:100000, sh:117647, p:PRICE.angel, type:{en:'Common',zh:'普通股'}, d:'2024-06-03'}]
+};
+function holder(){
+  const pos = HOLDERS[S.role] || HOLDERS.investor;
+  const inv = pos.reduce((a,b)=>a+b.inv,0), sh = pos.reduce((a,b)=>a+b.sh,0), own = sh/SHARES_OUT;
+  return {pos, inv, sh, own, val: sh*PRICE.angel, proRata: Math.round(own*5000000/250)*250};
+}
+const A_SHARES = 2941176, POST_A = SHARES_OUT + A_SHARES;
+const FYPLAN = 4860, YTD_ACT = 4004, YTD_PLAN = 3990;   // $K, Jan–Oct 2026
+const GLOSS = {
+  ttm:{t:{en:'TTM — trailing twelve months',zh:'TTM — 近12个月'}, d:{en:'The last 12 months added together. It smooths out busy and slow seasons, so the trend is easier to read.',zh:'最近 12 个月的合计。它能抹平淡旺季的波动，让趋势更容易看清。'}, ex:{en:'Nov 2025 – Oct 2026 revenue = $4.87M.',zh:'2025年11月至2026年10月营收 = 487 万美元。'}},
+  ebitda:{t:{en:'EBITDA margin',zh:'EBITDA 利润率'}, d:{en:'Earnings before interest, taxes, depreciation and amortization. A common way to measure operating profit. Margin = EBITDA ÷ revenue.',zh:'息税折旧摊销前利润，是衡量经营利润的常用指标。利润率 = EBITDA ÷ 营收。'}, ex:{en:'Q3: $86K EBITDA ÷ $1.23M revenue = 7.0%. Public specialty grocer Sprouts runs at about 11%.',zh:'三季度：EBITDA 8.6 万 ÷ 营收 123 万 = 7.0%。上市精品超市 Sprouts 约为 11%。'}},
+  sss:{t:{en:'Same-store sales growth',zh:'同店销售增长'}, d:{en:'Sales growth at stores open for more than a year. New stores are left out, so the number shows real demand, not just more locations.',zh:'只计算开业满一年门店的销售增长。新店不计入，所以反映的是真实需求，而不是靠多开店。'}, ex:{en:'+6.2% means the same stores sold 6.2% more than a year ago.',zh:'+6.2% 表示同样的门店比去年多卖了 6.2%。'}},
+  cogs:{t:{en:'Food & packaging cost',zh:'食材与包装成本'}, d:{en:'What we pay for ingredients and packaging, as a share of revenue. Lower is better.',zh:'食材和包装的支出占营收的比例，越低越好。'}, ex:{en:'31.5% means 31.5¢ of every $1 in sales goes to ingredients and packaging.',zh:'31.5% 表示每卖 1 美元，有 31.5 美分花在食材和包装上。'}},
+  labor:{t:{en:'Labor % of revenue',zh:'人工占比'}, d:{en:'Wages, payroll taxes and benefits divided by revenue. Lower is better, but not at the cost of service.',zh:'工资、税费和福利除以营收。越低越好，但不能以牺牲服务为代价。'}, ex:{en:'Q3: $405K labor ÷ $1.23M revenue = 32.9%.',zh:'三季度：人工 40.5 万 ÷ 营收 123 万 = 32.9%。'}},
+  moic:{t:{en:'Multiple on invested capital (MOIC)',zh:'投资回报倍数（MOIC）'}, d:{en:'Current value ÷ amount invested.',zh:'当前价值 ÷ 投入金额。'}, ex:{en:'1.75x means each $1 you put in is now valued at $1.75.',zh:'1.75 倍表示你投入的每 1 美元，现在价值 1.75 美元。'}},
+  lastround:{t:{en:'Value at last round',zh:'按上轮估值'}, d:{en:'Your shares × the price paid per share in the most recent funding round. Private shares cannot be sold freely, so this is a reference value, not a market price.',zh:'你的股数 × 最近一轮融资的每股价格。私营公司股份不能自由买卖，所以这是参考价值，不是市场价。'}, ex:{en:'308,824 shares × $0.85 (Angel round, 2024) = $262,500.',zh:'308,824 股 × 0.85 美元（2024 天使轮）= 262,500 美元。'}},
+  prorata:{t:{en:'Pro-rata right',zh:'按比例优先认购权'}, d:{en:'The right to invest enough in a new round to keep your ownership percentage the same, before new investors are allowed in.',zh:'在新投资人进入之前，认购足够份额、让你的持股比例保持不变的权利。'}, ex:{en:'2.63% ownership × $5M round = up to $131,250.',zh:'2.63% 持股 × 500 万本轮 = 最多 131,250 美元。'}},
+  premoney:{t:{en:'Pre-money valuation',zh:'投前估值'}, d:{en:'What the company is worth before the new money comes in. Post-money = pre-money + the new investment.',zh:'新资金进入之前公司的价值。投后估值 = 投前估值 + 新投资额。'}, ex:{en:'$20M pre-money + $5M Series A = $25M post-money. New investors own $5M ÷ $25M = 20%.',zh:'投前 2,000 万 + A 轮 500 万 = 投后 2,500 万。新投资人持股 500 万 ÷ 2,500 万 = 20%。'}},
+  dilution:{t:{en:'Dilution',zh:'稀释'}, d:{en:'When new shares are issued, each existing share becomes a smaller slice of a bigger company. Your percentage goes down; the value of your shares does not, at the same price.',zh:'公司发行新股后，每一股在公司里的占比变小，但公司整体变大了。你的比例下降，但按同一价格计算，你股份的价值不变。'}, ex:{en:'2.63% before → 2.10% after the Series A, worth $525,001 at $1.70 either way.',zh:'A 轮前 2.63% → A 轮后 2.10%，按每股 1.70 美元计算，价值都是 525,001 美元。'}},
+  evrev:{t:{en:'Sale value as a multiple of revenue',zh:'出售估值（营收倍数）'}, d:{en:'A quick way to value a growing restaurant or café brand: the price a buyer pays divided by yearly revenue.',zh:'给成长型餐饮品牌估值的常用方法：买家支付的价格除以年营收。'}, ex:{en:'$15.6M revenue × 2.0 = a $31.2M company. For reference, the Series A prices the company at about 4.1× today’s revenue.',zh:'营收 1,560 万 × 2.0 = 公司价值 3,120 万。作为参考，A 轮对公司的定价约为当前营收的 4.1 倍。'}},
+  liqpref:{t:{en:'Liquidation preference',zh:'清算优先权'}, d:{en:'If the company is sold, Series A investors can choose to take their money back first ($5M) or convert and share like everyone else. They pick whichever is larger.',zh:'公司出售时，A 轮投资人可以选择先拿回本金（500 万），或者转为普通股和其他人按比例分配，取两者中较高的一个。'}, ex:{en:'Below a $25M sale, Series A takes $5M first; above $25M, everyone splits by ownership.',zh:'出售价低于 2,500 万时，A 轮先拿回 500 万；高于 2,500 万时，所有人按持股比例分配。'}},
+  soft:{t:{en:'Soft commitment',zh:'意向承诺'}, d:{en:'A non-binding indication of how much an investor plans to put in. It becomes binding only when the subscription documents are signed and funded.',zh:'投资人表达的计划投资金额，不具约束力。只有签署认购文件并打款后才生效。'}, ex:{en:'$3.15M soft-committed of the $5M target = 63%.',zh:'目标 500 万中已有 315 万意向承诺 = 63%。'}}
+};
+
+MY.inv = MY.pos.reduce((a,b)=>a+b.inv,0); MY.sh = MY.pos.reduce((a,b)=>a+b.sh,0);
+MY.own = MY.sh/SHARES_OUT; MY.val = MY.sh*PRICE.angel; MY.proRata = Math.round(MY.own*5000000/250)*250;
+
+const REGISTRY = [
+  {n:'Emily Hart', g:{en:'Founder & CEO',zh:'创始人兼CEO'}, sh:6400000, inv:0, r:'Founding'},
+  {n:'Sofia Ramirez', g:{en:'Co-founder & COO',zh:'联合创始人兼COO'}, sh:1000000, inv:0, r:'Founding'},
+  {n:'Founding team & option pool', g:{en:'Employees',zh:'员工期权池'}, sh:600000, inv:0, r:'Founding'},
+  {n:'Robert Lin', g:{en:'Angel investor',zh:'天使投资人'}, sh:588235, inv:500000, r:'Angel'},
+  {n:'Lin Family Trust', g:{en:'Family trust',zh:'家族信托'}, sh:500000, inv:200000, r:'F&F'},
+  {n:'Hill Country Angels LLC', g:{en:'Angel group',zh:'天使投资团'}, sh:352941, inv:300000, r:'Angel'},
+  {n:'Daniel Chen', g:{en:'Individual',zh:'个人'}, sh:308824, inv:150000, r:'F&F + Angel', you:true},
+  {n:'Priya Nair', g:{en:'Individual',zh:'个人'}, sh:235294, inv:200000, r:'Angel'},
+  {n:'Maria & Tom Alvarez', g:{en:'Individuals',zh:'个人'}, sh:125000, inv:50000, r:'F&F'},
+  {n:'Kevin Zhou', g:{en:'Individual',zh:'个人'}, sh:125000, inv:50000, r:'F&F'},
+  {n:'Grace Park', g:{en:'Independent director',zh:'独立董事'}, sh:117647, inv:100000, r:'Angel'}
+];
+const ROUNDS = [
+  {n:{en:'Friends & Family',zh:'亲友轮'}, d:'2023-04-18', amt:800000, p:PRICE.ff, post:4000000, inv:24, st:'closed'},
+  {n:{en:'Angel',zh:'天使轮'}, d:'2024-06-03', amt:1500000, p:PRICE.angel, post:10000000, inv:31, st:'closed'},
+  {n:{en:'Series A Preferred',zh:'A轮优先股'}, d:'2027-01-31', amt:5000000, p:PRICE.a, post:25000000, inv:null, st:'open'}
+];
+const STAGES = [
+  {k:'interested', l:{en:'Interested',zh:'已登记兴趣'}},
+  {k:'invited', l:{en:'Invited',zh:'已邀请'}},
+  {k:'dataroom', l:{en:'In data room',zh:'查看资料室'}},
+  {k:'soft', l:{en:'Soft-committed',zh:'意向承诺'}},
+  {k:'funded', l:{en:'Funded',zh:'已到账'}}
+];
+const PIPE0 = [
+  {id:'p1', n:'Lone Star Food Ventures', t:{en:'Fund',zh:'基金'}, a:1500000, s:'soft'},
+  {id:'p2', n:'Hill Country Angels LLC', t:{en:'Existing · pro-rata+',zh:'老股东 · 超额认购'}, a:750000, s:'soft'},
+  {id:'p3', n:'Robert Lin', t:{en:'Existing · pro-rata',zh:'老股东 · 按比例'}, a:500000, s:'soft'},
+  {id:'p4', n:'Priya Nair', t:{en:'Existing',zh:'老股东'}, a:250000, s:'soft'},
+  {id:'p5', n:'Lin Family Trust', t:{en:'Existing',zh:'老股东'}, a:150000, s:'soft'},
+  {id:'p6', n:'Westlake Family Office', t:{en:'Family office',zh:'家族办公室'}, a:1000000, s:'dataroom'},
+  {id:'p7', n:'Marcus Webb', t:{en:'Individual',zh:'个人'}, a:200000, s:'dataroom'},
+  {id:'p8', n:'Daniel Chen', t:{en:'Existing · pro-rata',zh:'老股东 · 按比例'}, a:MY.proRata, s:'invited'},
+  {id:'p9', n:'Kevin Zhou', t:{en:'Existing',zh:'老股东'}, a:50000, s:'invited'},
+  {id:'p10', n:'Alex Morgan', t:{en:'Individual',zh:'个人'}, a:0, s:'interested'},
+  {id:'p11', n:'Hannah Brooks', t:{en:'Individual',zh:'个人'}, a:0, s:'interested'}
+];
+const pipe = () => DB.get('pipe', PIPE0);
+const softTotal = () => pipe().filter(p=>p.s==='soft'||p.s==='funded').reduce((a,b)=>a+(+b.a||0),0);
+
+const NEWS0 = [
+  {id:'n1', d:'2026-10-28', tag:{en:'Report',zh:'报告'}, aud:'sh', t:{en:'Q3 2026 Quarterly Report is available',zh:'2026年第三季度报告已发布'}, b:{en:'Revenue of $1.23M (+2.1% vs plan) and EBITDA margin of 7.0%. Read the full letter from Emily, including what went right and what did not.',zh:'营收 123 万美元（较计划 +2.1%），EBITDA 利润率 7.0%。完整阅读 Emily 的季度信，包括做得好和做得不好的地方。'}},
+  {id:'n2', d:'2026-10-12', tag:{en:'Expansion',zh:'扩张'}, aud:'sh', img:'build', t:{en:'Store #4 East Austin: construction 65% complete',zh:'4 号店东奥斯汀：施工完成 65%'}, b:{en:'Framing and kitchen rough-in are done. Opening is still on track for February 2027. Photos are in the Expansion tab.',zh:'框架和厨房管线已完成，预计 2027 年 2 月开业的计划不变。照片见"扩张进度"。'}},
+  {id:'n3', d:'2026-09-15', tag:{en:'Funding',zh:'融资'}, aud:'sh', t:{en:'Series A opens to existing shareholders first',zh:'A 轮优先向老股东开放'}, b:{en:'Every shareholder can invest up to their current ownership percentage before the round opens to new investors. Your allocation is on My Holdings.',zh:'在对新投资人开放前，每位股东可以按当前持股比例优先认购。你的额度见"我的持股"。'}},
+  {id:'n4', d:'2026-08-03', tag:{en:'Governance',zh:'治理'}, aud:'sh', t:{en:'Welcoming Grace Park to the board',zh:'欢迎 Grace Park 加入董事会'}, b:{en:'Grace led store expansion at a regional coffee chain for 12 years. She joins as our first independent director.',zh:'Grace 曾在一家区域连锁咖啡品牌负责门店扩张 12 年，她将担任公司第一位独立董事。'}}
+];
+const PUBNEWS = [
+  {d:'2026-10-12', t:{en:'Our fourth bakery is taking shape',zh:'第四家店正在成形'}, b:{en:'East Austin is next. The ovens arrive in December and the doors open in early 2027.',zh:'下一站是东奥斯汀。烤炉 12 月到位，2027 年初开门。'}},
+  {d:'2026-08-21', t:{en:'8,000 neighbors in our loyalty club',zh:'会员俱乐部突破 8,000 位邻居'}, b:{en:'Thank you, Austin. Members now account for over 40% of everything we bake and pour.',zh:'谢谢奥斯汀。会员消费已占我们全部销售的 40% 以上。'}},
+  {d:'2026-05-02', t:{en:'Named a Best Bakery of Austin',zh:'获评奥斯汀最佳面包店'}, b:{en:'A local readers’ poll put our South Congress sourdough at the top for the second year running.',zh:'本地读者投票连续第二年把南国会街店的酸种面包评为第一。'}}
+];
+
+const QA0 = [
+  {id:'q1', by:'Maria Alvarez', d:'2026-03-30', aud:'sh', q:{en:'Why was March revenue below plan?',zh:'为什么 3 月营收低于计划？'},
+   who:'James Okafor', role:{en:'CFO',zh:'财务长'}, ad:'2026-03-31',
+   a:{en:'The deck oven at our Mueller store failed and the store was closed for four days. The repair was covered under warranty, and April came in above plan. We have since added a preventive service contract for all three stores.',zh:'Mueller 店的层炉故障，停业了四天。维修在保修范围内，4 月营收已回到计划之上。之后我们为三家店都签了预防性维护合同。'}},
+  {id:'q2', by:'Daniel Chen', d:'2026-09-16', aud:'sh', q:{en:'Will existing shareholders have pro-rata rights in the Series A?',zh:'老股东在 A 轮有按比例优先认购权吗？'},
+   who:'Emily Hart', role:{en:'CEO',zh:'CEO'}, ad:'2026-09-16',
+   a:{en:'Yes. Every existing shareholder may invest up to their current ownership percentage before we open the round to new investors. Your exact allocation is shown on the My Holdings page.',zh:'有。在对新投资人开放前，每位老股东都可以按当前持股比例优先认购。你的具体额度在"我的持股"页面。'}},
+  {id:'q3', by:'Lin Family Trust', d:'2026-11-03', aud:'sh', q:{en:'Is Store #4 still opening in February even with the permit backlog in Austin?',zh:'奥斯汀许可证积压，4 号店还能在 2 月开业吗？'},
+   who:'Sofia Ramirez', role:{en:'COO',zh:'运营长'}, due:18, a:null}
+];
+const PQA0 = [
+  {id:'pq1', by:'Westlake Family Office', d:'2026-10-20', aud:'pr', q:{en:'What is the average payback period on a new store?',zh:'新店的平均回本周期是多久？'}, who:'James Okafor', role:{en:'CFO',zh:'财务长'}, ad:'2026-10-21',
+   a:{en:'Our two newer stores reached store-level breakeven in month 7 and month 9. On a $550K build-out, we model a 30–36 month cash payback. The store-by-store detail is in the financial summary.',zh:'两家较新的门店分别在第 7 和第 9 个月实现门店层面盈亏平衡。按单店 55 万美元的建店成本，我们测算现金回本期为 30–36 个月，分店明细见财务摘要。'}},
+  {id:'pq2', by:'Marcus Webb', d:'2026-10-24', aud:'pr', q:{en:'Who holds board seats after the Series A?',zh:'A 轮之后董事会席位怎么分配？'}, who:'Emily Hart', role:{en:'CEO',zh:'CEO'}, ad:'2026-10-25',
+   a:{en:'The board grows from three to five seats: two founders, one Series A investor seat, and two independent directors.',zh:'董事会将从 3 席扩到 5 席：两位创始人、一席 A 轮投资人代表、两位独立董事。'}}
+];
+const OWNERS = [{n:'James Okafor',r:{en:'CFO',zh:'财务长'}},{n:'Emily Hart',r:{en:'CEO',zh:'CEO'}},{n:'Sofia Ramirez',r:{en:'COO',zh:'运营长'}}];
+
+const DOCS = [
+  {id:'d1', n:{en:'Q3 2026 Quarterly Report',zh:'2026年第三季度报告'}, k:'PDF', sz:'2.4 MB', d:'2026-10-28', aud:{pub:false,pr:false,sh:true,bd:true}},
+  {id:'d2', n:{en:'Shareholder Agreement (2023)',zh:'股东协议（2023）'}, k:'PDF', sz:'1.1 MB', d:'2023-04-18', aud:{pub:false,pr:false,sh:true,bd:true}},
+  {id:'d3', n:{en:'Angel Round Subscription Agreement',zh:'天使轮认购协议'}, k:'PDF', sz:'860 KB', d:'2024-06-03', aud:{pub:false,pr:false,sh:true,bd:true}},
+  {id:'d4', n:{en:'Share Certificate — Daniel Chen',zh:'股权证书 — Daniel Chen'}, k:'PDF', sz:'240 KB', d:'2024-06-03', aud:{pub:false,pr:false,sh:true,bd:false}},
+  {id:'d5', n:{en:'2025 Annual Report',zh:'2025 年度报告'}, k:'PDF', sz:'3.8 MB', d:'2026-02-14', aud:{pub:false,pr:true,sh:true,bd:true}},
+  {id:'d6', n:{en:'2025 Capital Account Statement',zh:'2025 资本账户对账单'}, k:'PDF', sz:'180 KB', d:'2026-02-28', aud:{pub:false,pr:false,sh:true,bd:false}},
+  {id:'d7', n:{en:'Series A Investor Deck',zh:'A 轮投资人演示文稿'}, k:'PDF', sz:'6.2 MB', d:'2026-09-15', aud:{pub:false,pr:true,sh:true,bd:true}},
+  {id:'d8', n:{en:'Series A Term Sheet (draft)',zh:'A 轮条款清单（草案）'}, k:'PDF', sz:'310 KB', d:'2026-09-15', aud:{pub:false,pr:true,sh:true,bd:true}},
+  {id:'d9', n:{en:'Risk Factors',zh:'风险披露'}, k:'PDF', sz:'420 KB', d:'2026-09-15', aud:{pub:false,pr:true,sh:false,bd:true}},
+  {id:'d10', n:{en:'2025 Financial Statements (CPA-reviewed)',zh:'2025 财务报表（CPA 审阅）'}, k:'PDF', sz:'1.6 MB', d:'2026-03-20', aud:{pub:false,pr:true,sh:true,bd:true}},
+  {id:'d11', n:{en:'Brand & Company Overview',zh:'品牌与公司介绍'}, k:'PDF', sz:'2.0 MB', d:'2026-06-01', aud:{pub:true,pr:true,sh:true,bd:true}}
+];
+const BOARDDOCS = [
+  {n:{en:'Board Pack — November 18, 2026',zh:'董事会资料包 — 2026年11月18日'}, k:'PDF', d:'2026-11-04', sz:'5.1 MB'},
+  {n:{en:'Minutes — September 16, 2026',zh:'会议纪要 — 2026年9月16日'}, k:'PDF', d:'2026-09-20', sz:'420 KB'},
+  {n:{en:'Store #5 Round Rock — lease summary',zh:'5 号店 Round Rock — 租约摘要'}, k:'PDF', d:'2026-09-10', sz:'980 KB'},
+  {n:{en:'Series A use-of-funds plan',zh:'A 轮资金使用计划'}, k:'XLSX', d:'2026-08-18', sz:'210 KB'},
+  {n:{en:'Executive compensation review (confidential)',zh:'高管薪酬评估（保密）'}, k:'PDF', d:'2026-08-18', sz:'340 KB'}
+];
+const RESOS = [
+  {id:'R-2026-08', t:{en:'Approve the FY2027 operating budget',zh:'批准 2027 财年经营预算'}, d:'2026-11-01', st:'pending', signed:2},
+  {id:'R-2026-07', t:{en:'Approve the Store #5 Round Rock lease',zh:'批准 5 号店 Round Rock 租约'}, d:'2026-09-16', st:'approved', signed:3},
+  {id:'R-2026-06', t:{en:'Launch a Series A of up to $5,000,000',zh:'启动最高 500 万美元的 A 轮融资'}, d:'2026-08-20', st:'approved', signed:3},
+  {id:'R-2026-05', t:{en:'Appoint Grace Park as independent director',zh:'任命 Grace Park 为独立董事'}, d:'2026-07-29', st:'approved', signed:3}
+];
+const REPORTS = [
+  {id:'q3', t:{en:'Q3 2026 Quarterly Report',zh:'2026年第三季度报告'}, d:'2026-10-28', k:{en:'Quarterly',zh:'季报'}, full:true},
+  {id:'oct', t:{en:'October 2026 Monthly Update',zh:'2026年10月月度简报'}, d:'2026-11-03', k:{en:'Monthly',zh:'月报'}},
+  {id:'sep', t:{en:'September 2026 Monthly Update',zh:'2026年9月月度简报'}, d:'2026-10-04', k:{en:'Monthly',zh:'月报'}},
+  {id:'q2', t:{en:'Q2 2026 Quarterly Report',zh:'2026年第二季度报告'}, d:'2026-07-29', k:{en:'Quarterly',zh:'季报'}},
+  {id:'fy25', t:{en:'2025 Annual Report',zh:'2025 年度报告'}, d:'2026-02-14', k:{en:'Annual',zh:'年报'}}
+];
+const UNREAD_SAMPLE = ['Kevin Zhou','Hannah Lee','Omar Haddad','Tessa Moore','Brian Wu','Carla Diaz','Victor Huang','Nina Patel','Sam Ortega','Julia Fong','Ray Castillo','Mei Tan','Adam Price'];
+
+
+/* ---------------- v3 data ---------------- */
+const DAYS = [30,31,31,28,31,30,31,30,31,31,30,31];
+const TICK = [13.70,13.85,13.75,13.80,13.85,13.95,14.05,14.15,14.10,14.20,14.30,14.35];
+const TXD  = ACT.map((a,i)=>Math.round(a*1000/(3*DAYS[i]*TICK[i])));
+const MEM  = [6900,7080,7210,7330,7460,7600,7760,7950,8090,8230,8400,8460];
+const METRICS = [
+  {k:'rev', l:{en:'Revenue',zh:'营收'}, data:ACT, fmt:v=>`$${Math.round(v)}K`, axis:v=>`$${v}K`},
+  {k:'tx', l:{en:'Customers / day',zh:'日均客流'}, data:TXD, fmt:v=>`${Math.round(v)} ${L('per store','/店')}`, axis:v=>v},
+  {k:'tick', l:{en:'Avg ticket',zh:'客单价'}, data:TICK, fmt:v=>`$${(+v).toFixed(2)}`, axis:v=>`$${(+v).toFixed(2)}`},
+  {k:'mem', l:{en:'Members',zh:'会员'}, data:MEM, fmt:v=>num(Math.round(v)), axis:v=>num(v)}
+];
+const RANGES = {'6m':[6,7,8,9,10,11], 'ytd':[2,3,4,5,6,7,8,9,10,11], '12m':[0,1,2,3,4,5,6,7,8,9,10,11]};
+const MIX = [
+  [{en:'Bread',zh:'面包'},.34,'#1C2B4A'],[{en:'Coffee & drinks',zh:'咖啡饮品'},.26,'#C8892E'],[{en:'Pastries',zh:'糕点'},.22,'#5B6E8C'],[{en:'Café food',zh:'简餐'},.13,'#D9B27A'],[{en:'Retail & gifts',zh:'零售礼品'},.05,'#A9B4C2']
+];
+const PHOTOS = [
+  {img:'build', d:'2026-10-08', t:{en:'Store #4: framing and kitchen rough-in complete',zh:'4 号店：框架与厨房管线完工'}},
+  {img:'flat', d:'2026-10-01', t:{en:'Autumn menu launched — rye, pear tart, maple latte',zh:'秋季菜单上线 — 黑麦面包、梨挞、枫糖拿铁'}},
+  {img:'store', d:'2026-09-20', t:{en:'The Domain after its second-year refresh',zh:'Domain 店完成两周年翻新'}},
+  {img:'team', d:'2026-09-16', t:{en:'Q3 board meeting — Store #5 lease approved',zh:'三季度董事会 — 批准 5 号店租约'}}
+];
+const PINS = [
+  {id:'soco', x:318, y:312, k:'open', n:'South Congress', si:0, img:'hero', note:{en:'Our first store and still the busiest. Weekend lines of 20+ minutes.',zh:'第一家店，至今最忙，周末排队超过 20 分钟。'}},
+  {id:'mueller', x:388, y:168, k:'open', n:'Mueller', si:1, img:'store', note:{en:'Family neighborhood; strongest weekday breakfast trade.',zh:'家庭社区，工作日早餐生意最好。'}},
+  {id:'domain', x:282, y:92, k:'open', n:'The Domain', si:2, img:'store', note:{en:'Year two. Tracking the same curve Mueller did a year earlier.',zh:'开业第二年，走势与 Mueller 店一年前相同。'}},
+  {id:'east', x:378, y:240, k:'build', n:'East Austin', img:'build', note:{en:'Store #4 · 65% built · opening February 2027 · $362K of $550K spent.',zh:'4 号店 · 完工 65% · 2027年2月开业 · 已支出 36.2 万 / 55 万。'}},
+  {id:'rr', x:368, y:34, k:'plan', n:'Round Rock', note:{en:'Store #5 · lease approved Sep 16 · design starts January · opening Q3 2027.',zh:'5 号店 · 9月16日批准租约 · 1月开始设计 · 2027年三季度开业。'}},
+  {id:'t1', x:300, y:162, k:'target', n:'Hyde Park'},{id:'t2', x:168, y:282, k:'target', n:'Westlake'},{id:'t3', x:150, y:52, k:'target', n:'Cedar Park'},
+  {id:'t4', x:470, y:84, k:'target', n:'Pflugerville'},{id:'t5', x:240, y:330, k:'target', n:'Zilker'}
+];
+
+/* ---------------- v3 components ---------------- */
+const CH = {};
+const TT = {backgroundColor:'#1C2B4A', titleColor:'#fff', bodyColor:'#E6EAF0', padding:10, cornerRadius:8, boxPadding:4, titleFont:{family:'Inter',weight:'600'}, bodyFont:{family:'Inter'}};
+function trendCard(){
+  return `<div class="trend-ctl"><div class="seg">${METRICS.map(m=>`<button data-act="metric" data-m="${m.k}" class="${S.metric===m.k?'on':''}">${T(m.l)}</button>`).join('')}</div>
+  <div class="seg">${[['6m',L('6M','6个月')],['ytd',L('YTD','年初至今')],['12m',L('12M','12个月')]].map(r=>`<button data-act="range" data-r="${r[0]}" class="${S.range===r[0]?'on':''}">${r[1]}</button>`).join('')}</div></div>
+  <div class="trend-sum" id="trend-sum"></div><div class="cbox" style="height:280px"><canvas id="c-trend" aria-label="${L('Interactive trend chart','可交互趋势图')}"></canvas></div>`;
+}
+function drawTrend(){
+  const el = document.getElementById('c-trend'); if(!el || !window.Chart) return;
+  if(CH.trend){ CH.trend.destroy(); delete CH.trend; }
+  const m = METRICS.find(x=>x.k===S.metric), idx = RANGES[S.range];
+  const labels = idx.map(i=>T(MLBL)[i]), data = idx.map(i=>m.data[i]);
+  let ds;
+  if(m.k==='rev') ds = [
+    {type:'bar', label:L('Actual','实际'), data, backgroundColor:data.map((v,j)=>v<PLAN[idx[j]]?'#B8574A':'#1C2B4A'), borderRadius:5, maxBarThickness:36, order:2},
+    {type:'line', label:L('Plan','计划'), data:idx.map(i=>PLAN[i]), borderColor:'#C8892E', borderDash:[5,4], borderWidth:2, pointRadius:3, pointBackgroundColor:'#fff', pointBorderColor:'#C8892E', tension:.3, order:1}];
+  else ds = [{type:'line', label:T(m.l), data, borderColor:'#1C2B4A', borderWidth:2.6, tension:.3, cubicInterpolationMode:'monotone', fill:true, pointRadius:0, pointHoverRadius:6, pointHoverBackgroundColor:'#C8892E', pointHoverBorderColor:'#fff', pointHoverBorderWidth:2,
+    backgroundColor:c=>{ const ch=c.chart, a=ch.chartArea; if(!a) return 'rgba(28,43,74,.08)'; const g=ch.ctx.createLinearGradient(0,a.top,0,a.bottom); g.addColorStop(0,'rgba(28,43,74,.22)'); g.addColorStop(1,'rgba(28,43,74,0)'); return g; }}];
+  CH.trend = new Chart(el, {type: m.k==='rev'?'bar':'line', data:{labels, datasets:ds}, options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false},
+    plugins:{legend:{display:false}, tooltip:Object.assign({}, TT, {callbacks:{label:c=>` ${c.dataset.label}: ${m.fmt(c.parsed.y)}`}})},
+    scales:{x:{grid:{display:false}, ticks:{color:'#3E4A5C', font:{family:'Inter'}, maxRotation:0, autoSkipPadding:6}}, y:{beginAtZero:m.k==='rev', grid:{color:'#EFEAE0'}, border:{display:false}, ticks:{color:'#8A97A8', font:{family:'Inter'}, callback:v=>m.axis(v), maxTicksLimit:6}}},
+    animation:{duration:650, easing:'easeOutQuart'}}});
+  const f=data[0], l=data[data.length-1], ch=(l/f-1)*100;
+  const sum = document.getElementById('trend-sum');
+  if(sum) sum.innerHTML = `<b>${m.fmt(l)}</b><span>${labels[labels.length-1]}</span><span class="delta ${ch>=0?'up':'down'}">${ch>=0?'+':''}${ch.toFixed(1)}%</span><span class="muted">${L('since','对比')} ${labels[0]}</span>${m.k==='rev'?`<span class="muted">· ${L('red bars = below plan','红色柱 = 低于计划')}</span>`:''}`;
+}
+function mixCard(){
+  return `<div class="hd"><h3>${L('Where revenue comes from','营收来源')}</h3><span class="sub2">${L('Last 12 months','近12个月')}</span></div>
+  <div class="donut-wrap"><div class="donut-c"><canvas id="c-mix" aria-label="${L('Revenue mix','营收结构')}"></canvas><div class="ctr"><div><b>${kM(TTM*1000)}</b><span>${L('TTM','近12月')}</span></div></div></div>
+  <div class="mixleg">${MIX.map(x=>`<div><i style="background:${x[2]}"></i><span>${T(x[0])}</span><b>${pct(x[1],0)}</b><span class="m">${kM(x[1]*TTM*1000)}</span></div>`).join('')}</div></div>
+  <p class="small muted" style="margin-top:12px">${L('Coffee and pastries carry the highest margins; bread brings people in every day.','咖啡和糕点利润最高；面包带来每天的回头客。')}</p>`;
+}
+function drawMix(){
+  const el=document.getElementById('c-mix'); if(!el||!window.Chart) return;
+  CH.mix = new Chart(el,{type:'doughnut', data:{labels:MIX.map(x=>T(x[0])), datasets:[{data:MIX.map(x=>Math.round(x[1]*100)), backgroundColor:MIX.map(x=>x[2]), borderColor:'#fff', borderWidth:3, hoverOffset:8}]},
+    options:{responsive:true, maintainAspectRatio:false, cutout:'68%', plugins:{legend:{display:false}, tooltip:Object.assign({},TT,{callbacks:{label:c=>` ${c.label}: ${c.parsed}% · ${kM(c.parsed/100*TTM*1000)}`}})}, animation:{animateRotate:true, duration:900}}});
+}
+function memCard(){
+  return `<div class="hd"><h3>${L('Loyalty members','会员增长')}</h3><span class="sub2">${L('41% of all sales','占全部销售 41%')}</span></div>
+  <div style="display:flex;gap:10px;align-items:baseline;margin-bottom:6px"><span class="numl navy">${num(MEM[11])}</span><span class="delta up">+${pct(MEM[11]/MEM[0]-1,0)}</span><span class="small muted">${L('in 12 months','12 个月')}</span></div>
+  <div class="cbox" style="height:190px"><canvas id="c-mem" aria-label="${L('Member growth','会员增长')}"></canvas></div>`;
+}
+function drawMem(){
+  const el=document.getElementById('c-mem'); if(!el||!window.Chart) return;
+  CH.mem = new Chart(el,{type:'line', data:{labels:T(MLBL), datasets:[{label:L('Members','会员'), data:MEM, borderColor:'#C8892E', borderWidth:2.6, tension:.3, cubicInterpolationMode:'monotone', fill:true, pointRadius:0, pointHoverRadius:5,
+    backgroundColor:c=>{ const ch=c.chart,a=ch.chartArea; if(!a) return 'rgba(200,137,46,.1)'; const g=ch.ctx.createLinearGradient(0,a.top,0,a.bottom); g.addColorStop(0,'rgba(200,137,46,.28)'); g.addColorStop(1,'rgba(200,137,46,0)'); return g; }}]},
+    options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:Object.assign({},TT,{callbacks:{label:c=>` ${num(c.parsed.y)} ${L('members','位会员')}`}})},
+      scales:{x:{grid:{display:false},ticks:{color:'#3E4A5C',font:{family:'Inter'},maxRotation:0,autoSkipPadding:8}}, y:{grid:{color:'#EFEAE0'},border:{display:false},ticks:{color:'#8A97A8',font:{family:'Inter'},maxTicksLimit:5,callback:v=>num(v)}}}, animation:{duration:900}}});
+}
+function heatCard(){
+  const days=[[{en:'Mon',zh:'一'},.82],[{en:'Tue',zh:'二'},.80],[{en:'Wed',zh:'三'},.84],[{en:'Thu',zh:'四'},.88],[{en:'Fri',zh:'五'},.98],[{en:'Sat',zh:'六'},1.18],[{en:'Sun',zh:'日'},1.10]];
+  const base=[.30,.78,.95,.82,.55,.72,.66,.42,.34,.30,.26,.18];
+  const vals=days.map((d,di)=>base.map((b,h)=>b*d[1]*(di>=5&&h>=1&&h<=4?1.15:1)*(di<5&&(h===5||h===6)?1.08:1)));
+  const mx=Math.max(...vals.flat());
+  const hr=h=>{ const t=7+h; return S.lang==='zh'?`${t}点`:`${t>12?t-12:t}${t>=12?'p':'a'}`; };
+  let g=`<div></div>${base.map((_,h)=>`<div class="hh">${h%2===0?hr(h):''}</div>`).join('')}`;
+  vals.forEach((row,di)=>{ g+=`<div class="dd">${T(days[di][0])}</div>`+row.map((v,h)=>`<div class="c" style="background:rgba(28,43,74,${(.06+.94*v/mx).toFixed(2)})" title="${T(days[di][0])} ${hr(h)} · ~${Math.round(v*120)} ${L('customers across 3 stores','位顾客（3 家店合计）')}"></div>`).join(''); });
+  return `<div class="hd"><h3>${L('When customers come in','顾客什么时候来')}</h3><span class="sub2">${L('Average week · all stores','平均一周 · 全部门店')}</span></div>
+  <div class="heat">${g}</div><div class="heatleg">${L('Quiet','清闲')} <span class="g"></span> ${L('Busy','繁忙')}</div>
+  <p class="small muted" style="margin-top:10px">${L('Saturday and Sunday mornings are the peak — the reason a central bakery and more stores will add revenue, not just move it around.','周六、周日早上是高峰 —— 这正是中央工坊和更多门店能带来新增营收、而不只是分流的原因。')}</p>`;
+}
+function flowCard(){
+  const rows=[[L('Revenue','营收'),100,'#1C2B4A','total'],[L('Food & packaging','食材包装'),31.5,'#B8574A'],[L('Labor','人工'),32.9,'#C77B6E'],[L('Rent','租金'),9.8,'#D6A49A'],[L('Other costs','其他'),18.8,'#E3C3BB'],[L('Profit (EBITDA)','利润'),7.0,'#4F7A5A','total']];
+  const W=640,H=290,pl=40,pr=10,pt=30,pb=44,cw=(W-pl-pr)/rows.length,bw=cw*.58,y=v=>pt+(H-pt-pb)*(1-v/100);
+  let g='', run=100;
+  [0,25,50,75,100].forEach(t=>{ g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(t)}" y2="${y(t)}" stroke="#EFEAE0"/><text x="${pl-8}" y="${y(t)+4}" text-anchor="end" font-size="11" fill="#8A97A8">${t}¢</text>`; });
+  rows.forEach((r,i)=>{ const cx=pl+cw*i+cw/2; let top,bot;
+    if(r[3]==='total'){ top=r[1]; bot=0; } else { top=run; bot=run-r[1]; run=bot; }
+    g+=`<rect x="${cx-bw/2}" y="${y(top)}" width="${bw}" height="${Math.max(2,y(bot)-y(top))}" rx="4" fill="${r[2]}"><title>${r[0]}: ${r[1]}¢</title></rect>`;
+    g+=`<text x="${cx}" y="${y(top)-8}" text-anchor="middle" font-size="12.5" font-weight="700" fill="${r[3]==='total'?r[2]:'#A84B3A'}">${r[3]==='total'?(i===0?'$1.00':r[1].toFixed(1)+'¢'):'−'+r[1]+'¢'}</text>`;
+    g+=`<text x="${cx}" y="${H-24}" text-anchor="middle" font-size="11.5" fill="#3E4A5C">${r[0]}</text>`;
+    if(i<rows.length-1){ const nx=pl+cw*(i+1)+cw/2; const lvl = r[3]==='total' && i===0 ? 100 : bot; g+=`<line x1="${cx+bw/2}" x2="${nx-bw/2}" y1="${y(lvl)}" y2="${y(lvl)}" stroke="#C9C1B2" stroke-dasharray="3 3"/>`; }
+  });
+  return `<div class="hd"><h3>${L('Where every $1 of sales goes','每 1 美元销售额去了哪里')}</h3><span class="sub2">Q3 2026</span></div>
+  <div class="chart"><div class="cscroll"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${L('Waterfall chart of costs per dollar of revenue','每美元营收的成本瀑布图')}" style="min-width:520px">${g}</svg></div></div>
+  <p class="small" style="color:var(--ink-2);margin-top:8px">${L('Of every dollar a customer spends, 7 cents is left as operating profit. The central bakery is designed to cut food & packaging by ~3 cents — nearly half again on profit.','顾客每花 1 美元，留下 7 美分经营利润。中央烘焙工坊的目标是把食材包装成本降低约 3 美分 —— 相当于利润再增加四成多。')}</p>`;
+}
+function mapSvg(){
+  let g = `<defs><pattern id="gridp" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="#EDE6DA" stroke-width="1"/></pattern></defs>
+  <rect width="600" height="380" fill="url(#gridp)"/>
+  <path d="M0 262 C90 250 150 286 230 272 S330 250 400 262 520 300 600 288" fill="none" stroke="#C9D6E2" stroke-width="16" stroke-linecap="round"/>
+  <path d="M0 262 C90 250 150 286 230 272 S330 250 400 262 520 300 600 288" fill="none" stroke="#B5C6D6" stroke-width="1"/>
+  <ellipse cx="236" cy="300" rx="26" ry="16" fill="#DCE5D3"/><ellipse cx="330" cy="140" rx="22" ry="12" fill="#DCE5D3"/>
+  <path d="M342 0 L338 120 L346 250 L330 380" fill="none" stroke="#D9CFBE" stroke-width="5"/><text x="352" y="128" font-size="10" fill="#A79C89" font-weight="600">I-35</text>
+  <path d="M226 0 C238 90 214 170 232 260 S224 340 240 380" fill="none" stroke="#E2D9CA" stroke-width="4"/><text x="196" y="200" font-size="10" fill="#A79C89" font-weight="600">MoPac</text>
+  <path d="M0 196 C150 200 400 190 600 202" fill="none" stroke="#E7DFD2" stroke-width="3"/>
+  <rect x="292" y="226" width="40" height="22" rx="4" fill="#E9E1D3"/><text x="312" y="240" text-anchor="middle" font-size="10" fill="#8A7F6C" font-weight="700">${L('DOWNTOWN','市中心')}</text>
+  <text x="24" y="250" font-size="10.5" fill="#8EA3B8" font-style="italic">${L('Lady Bird Lake','瓢虫湖')}</text>`;
+  PINS.forEach(p=>{
+    const sel = S.pin===p.id ? 'sel' : '';
+    const lbl = p.n + (p.k==='plan'?` · 2027`:'');
+    let dot='';
+    if(p.k==='open') dot = `<circle class="dotc" cx="${p.x}" cy="${p.y}" r="9" fill="#1C2B4A" stroke="#fff" stroke-width="3"/>`;
+    if(p.k==='build') dot = `<circle class="pulse" cx="${p.x}" cy="${p.y}" r="9" fill="#C8892E" opacity=".6"/><circle class="dotc" cx="${p.x}" cy="${p.y}" r="9" fill="#C8892E" stroke="#fff" stroke-width="3"/>`;
+    if(p.k==='plan') dot = `<circle class="dotc" cx="${p.x}" cy="${p.y}" r="8" fill="#fff" stroke="#C8892E" stroke-width="3"/>`;
+    if(p.k==='target') dot = `<circle class="dotc" cx="${p.x}" cy="${p.y}" r="15" fill="rgba(138,151,168,.08)" stroke="#8A97A8" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+    const ty = p.k==='target' ? p.y+28 : p.y-15;
+    g += `<g class="pin ${p.k} ${sel}" data-act="pin" data-id="${p.id}" tabindex="0" role="button" aria-label="${esc(lbl)}"><circle class="hit" cx="${p.x}" cy="${p.y}" r="22"/>${dot}<text class="lbl2" x="${p.x}" y="${ty}" text-anchor="middle" font-size="${p.k==='target'?10.5:12}" font-weight="${p.k==='target'?500:600}" fill="${p.k==='target'?'#8A97A8':'#26301F'}" paint-order="stroke" stroke="#F7F3EC" stroke-width="4">${esc(lbl)}</text></g>`;
+  });
+  return `<svg viewBox="0 0 600 380" role="img" aria-label="${L('Map of Austin stores, construction, and target neighborhoods','奥斯汀门店、在建店与目标社区地图')}">${g}</svg>`;
+}
+function pinInfo(id){
+  const p = PINS.find(x=>x.id===id);
+  if(!p) return `<div class="eyebrow">${L('Our footprint','门店布局')}</div><h4>${L('Austin, today and next','奥斯汀：现在与未来')}</h4>
+    <div class="list">${[[3,L('stores open','家已开业'),'#1C2B4A'],[1,L('under construction','家在建'),'#C8892E'],[1,L('lease signed','家已签租约'),'#fff'],[5,L('target neighborhoods','个目标社区'),'rgba(138,151,168,.25)']].map(r=>`<div class="item" style="grid-template-columns:auto 1fr;padding:10px 0"><span class="serif" style="font-size:28px;font-weight:600;color:var(--navy);min-width:28px">${r[0]}</span><span style="font-size:14px">${r[1]}</span></div>`).join('')}</div>
+    <p class="small muted" style="margin-top:auto">${ic('arrow',13)} ${L('Tap any location on the map for details.','点击地图上的任意位置查看详情。')}</p>`;
+  const kTxt = {open:[L('Open','营业中'),'ok'],build:[L('Under construction','建设中'),'watch'],plan:[L('Lease signed','已签租约'),'navy'],target:[L('Target neighborhood','目标社区'),'']}[p.k];
+  const s2 = p.si!=null ? STORES[p.si] : null;
+  return `${p.img?`<div class="ph"><img src="${IMG[p.img]}" alt="${esc(p.n)}"></div>`:''}
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h4>${esc(p.n)}</h4><span class="chip ${kTxt[1]}">${kTxt[0]}</span></div>
+    ${s2?`<div class="mini" style="border-top:0;padding-top:0"><div><b>${kM(s2.rev*1000)}</b><span>${L('Revenue','营收')}</span></div><div><b>${pct(s2.m)}</b><span>${L('Margin','利润率')}</span></div><div><b>${s2.tx}</b><span>${L('Tx / day','日均单')}</span></div></div>`:''}
+    ${p.k==='build'?`<div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>${L('Construction','施工进度')}</span><b>65%</b></div><div class="bar"><i style="width:65%"></i></div></div>`:''}
+    <p class="small" style="color:var(--ink-2)">${p.note?T(p.note):L('On our short list for stores 6–10. Lease search 2027–2029.','6–10 号店的候选社区，2027–2029 年寻找店址。')}</p>
+    <button class="btn btn-line btn-sm" data-act="pin" data-id="" style="margin-top:auto;align-self:flex-start">← ${L('All locations','全部位置')}</button>`;
+}
+function mapCard(){
+  return `<div class="card" style="padding:0;overflow:hidden;margin-bottom:24px"><div style="padding:20px 24px 14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><h3 style="font-family:var(--sans);font-size:16.5px;font-weight:600">${L('Store map','门店地图')}</h3>
+    <div class="maplegend"><span><em style="background:#1C2B4A"></em>${L('Open','营业中')}</span><span><em style="background:#C8892E"></em>${L('Building','建设中')}</span><span><em style="background:#fff;border:2px solid #C8892E"></em>${L('Lease signed','已签租约')}</span><span><em style="border:1.5px dashed #8A97A8"></em>${L('Target','目标社区')}</span></div></div>
+    <div class="mapwrap" style="border:0;border-top:1px solid var(--line-2);border-radius:0"><div id="mapsvg">${mapSvg()}</div><div class="mapinfo" id="pin-info">${pinInfo(S.pin)}</div></div></div>`;
+}
+function sinceStrip(){
+  return `<div class="since"><span class="lb">${ic('bell',14)} ${L('Since your last visit · Oct 15','自上次登录 · 10月15日以来')}</span>
+  <a href="#/p/reports" data-act="openq3">${ic('report',13)} ${L('1 new report','1 份新报告')}</a>
+  <a href="#/p/perf" data-act="perftab" data-t="trends">${ic('chart',13)} ${L('October revenue','10 月营收')} <b>+2.6%</b> ${L('vs plan','对比计划')}</a>
+  <a href="#/p/perf" data-act="perftab" data-t="exp">${ic('store',13)} ${L('Store #4: 55% → 65% built','4 号店：完工 55% → 65%')}</a>
+  <a href="#/p/qa">${ic('chat',13)} ${L('2 questions answered','2 个问题已回答')}</a></div>`;
+}
+function photoWall(){
+  return `<div class="sechd" style="margin-top:28px"><h3>${L('From the stores','来自门店')}</h3><span>${L('Photos from the team, every month','团队每月更新的照片')}</span></div>
+  <div class="photos">${PHOTOS.map((p,i)=>`<button class="photo" data-act="photo" data-i="${i}"><img src="${IMG[p.img]}" alt="${esc(T(p.t))}" loading="lazy"><span class="cap"><small>${fdate(p.d)}</small>${esc(T(p.t))}</span></button>`).join('')}</div>`;
+}
+/* simulator */
+const SIMDEF = {stores:10, rps:1.56, mult:2.0, part:false};
+const PRESETS = {cons:{stores:6, rps:1.40, mult:1.2}, base:{stores:10, rps:1.56, mult:2.0}, up:{stores:12, rps:1.75, mult:2.6}};
+const simState = () => Object.assign({}, SIMDEF, DB.get('sim',{}));
+function payout(value, common, aSh){
+  if(value*A_SHARES/POST_A >= 5e6) return (common+aSh)*value/POST_A;
+  const aTake = Math.min(value,5e6), rest = Math.max(0,value-5e6);
+  return aSh*(aTake/A_SHARES) + common*(rest/SHARES_OUT);
+}
+function simCalc(st){
+  const H = holder(), prSh = Math.round(H.proRata/PRICE.a), aSh = st.part?prSh:0;
+  const value = st.stores*st.rps*1e6*st.mult, rev = st.stores*st.rps*1e6;
+  const pay = payout(value, H.sh, aSh), cost = H.inv + (st.part?H.proRata:0);
+  return {H, prSh, aSh, value, rev, pay, cost, moic: pay/cost, own:(H.sh+aSh)/POST_A, prefBinds: value*A_SHARES/POST_A < 5e6};
+}
+function simView(){
+  const st = simState(), r = simCalc(st);
+  const pre = Object.entries(PRESETS).find(([k,v])=>v.stores===st.stores&&Math.abs(v.rps-st.rps)<.001&&Math.abs(v.mult-st.mult)<.001);
+  return `<div class="pagehd"><div><div class="eyebrow">${L('Return simulator · illustrative only','回报模拟器 · 仅为示意')}</div><h2>${L('What could your stake be worth in 2029?','到 2029 年，你的股份可能值多少？')}</h2></div>
+  <div class="seg" id="presets">${[['cons',L('Conservative','保守')],['base',L('Base plan','基准计划')],['up',L('Upside','乐观')]].map(p=>`<button data-act="preset" data-p="${p[0]}" class="${pre&&pre[0]===p[0]?'on':''}">${p[1]}</button>`).join('')}</div></div>
+  <div class="simgrid">
+    <div class="card">
+      <div class="hd"><h3>${L('Your assumptions','你的假设')}</h3><span class="sub2">${L('Drag to explore','拖动滑块试试')}</span></div>
+      <div class="sl-row"><div class="top"><label for="sim-stores">${L('Stores open by 2029','2029 年门店数')}</label><output id="o-stores">${st.stores}</output></div><input id="sim-stores" type="range" min="4" max="14" step="1" value="${st.stores}" data-sim="stores"><div class="ends"><span>4</span><span>${L('plan: 10','计划：10')}</span><span>14</span></div></div>
+      <div class="sl-row"><div class="top"><label for="sim-rps">${L('Revenue per store','单店年营收')}</label><output id="o-rps">$${st.rps.toFixed(2)}M</output></div><input id="sim-rps" type="range" min="1.1" max="2.0" step="0.02" value="${st.rps}" data-sim="rps"><div class="ends"><span>$1.10M</span><span>${L('today: $1.62M','现在：$1.62M')}</span><span>$2.00M</span></div></div>
+      <div class="sl-row"><div class="top"><label for="sim-mult">${L('Sale value (× revenue)','出售估值（× 营收）')}${tip('evrev')}</label><output id="o-mult">${st.mult.toFixed(1)}x</output></div><input id="sim-mult" type="range" min="0.6" max="3.2" step="0.1" value="${st.mult}" data-sim="mult"><div class="ends"><span>0.6x</span><span>${L('Series A: 4.1x','A 轮：4.1x')}</span><span>3.2x</span></div></div>
+      <label class="switch"><span><b style="font-size:14px">${L('Join the Series A pro-rata','参与 A 轮按比例认购')}</b><br><span class="small muted">${L('Invest','追加投入')} ${money(r.H.proRata)} ${L('for','获得')} ${num(r.prSh)} ${L('preferred shares','股优先股')}</span></span><input type="checkbox" data-sim="part" ${st.part?'checked':''}><span class="tg"></span></label>
+      <div class="formula" id="o-formula"></div>
+    </div>
+    <div class="card" data-nocount>
+      <div class="simout">
+        <div><div class="lbl">${L('Your stake in 2029','2029 年你的股份价值')}</div><div class="big" id="o-pay"></div></div>
+        <div><div class="lbl">MOIC${tip('moic')}</div><div class="mid" id="o-moic"></div></div>
+        <div><div class="lbl">${L('You put in','你的投入')}</div><div class="mid" id="o-cost" style="color:var(--ink-2)"></div></div>
+      </div>
+      <div class="cbox" style="height:260px"><canvas id="c-sim" aria-label="${L('Your payout at different sale values','不同出售估值下你的回报')}"></canvas></div>
+      <div class="notice navy" id="o-pref" style="margin:14px 0 0"></div>
+    </div>
+  </div>
+  <div class="notice">${ic('shield')} <span>${L('Illustration only — not a forecast, promise or offer. Assumes a sale of the whole company in 2029, no debt, no further share issuance after the Series A, and a 1x non-participating liquidation preference for Series A. Real outcomes can be lower, including a total loss.','仅为示意，不构成预测、承诺或要约。假设公司在 2029 年整体出售、无负债、A 轮后不再增发股份，且 A 轮优先股享有 1 倍不参与分配的清算优先权。实际结果可能更低，包括损失全部投资。')}</span></div>`;
+};
+function updateSim(){
+  const st = simState(), r = simCalc(st);
+  const set=(id,v)=>{ const e=document.getElementById(id); if(e) e.innerHTML=v; };
+  set('o-stores', st.stores); set('o-rps', `$${st.rps.toFixed(2)}M`); set('o-mult', `${st.mult.toFixed(1)}x`);
+  set('o-pay', money(Math.round(r.pay/100)*100)); set('o-cost', money(r.cost));
+  const me=document.getElementById('o-moic'); if(me){ me.textContent = r.moic.toFixed(2)+'x'; me.style.color = r.moic>=1 ? 'var(--ok)' : 'var(--bad)'; }
+  set('o-formula', `${L('Company value','公司估值')} = ${st.stores} ${L('stores','家店')} × $${st.rps.toFixed(2)}M × ${st.mult.toFixed(1)} = <b>${kM(r.value)}</b> · ${L('your ownership','你的持股')} <b>${pct(r.own,2)}</b>`);
+  set('o-pref', r.prefBinds ? `${ic('shield')} <span>${L('At this value Series A investors take their $5M back first (liquidation preference), so common shares receive less per share.','在这个估值下，A 轮投资人先拿回 500 万（清算优先权），普通股每股分得更少。')} ${tip('liqpref')}</span>` : `${ic('check')} <span>${L('At this value everyone shares pro rata — Series A converts to common.','在这个估值下，所有股东按比例分配 —— A 轮优先股转为普通股。')} ${tip('liqpref')}</span>`);
+  document.querySelectorAll('#presets button').forEach(b=>{ const v=PRESETS[b.dataset.p]; b.classList.toggle('on', v.stores===st.stores&&Math.abs(v.rps-st.rps)<.001&&Math.abs(v.mult-st.mult)<.001); });
+  if(CH.sim){ const d=simSeries(st); CH.sim.data.datasets[0].data=d.no; CH.sim.data.datasets[1].data=d.yes; CH.sim.data.datasets[2].data=[{x:st.mult, y:r.pay/1000}];
+    CH.sim.data.datasets[0].borderWidth = st.part?1.6:3; CH.sim.data.datasets[1].borderWidth = st.part?3:1.6; CH.sim.update('none'); }
+}
+function simSeries(st){
+  const H=holder(), prSh=Math.round(H.proRata/PRICE.a), no=[], yes=[];
+  for(let m=0.6;m<=3.201;m+=0.1){ const v=st.stores*st.rps*1e6*m; no.push({x:+m.toFixed(1), y:payout(v,H.sh,0)/1000}); yes.push({x:+m.toFixed(1), y:payout(v,H.sh,prSh)/1000}); }
+  return {no, yes};
+}
+function drawSim(){
+  const el=document.getElementById('c-sim'); if(!el||!window.Chart) return;
+  const st=simState(), d=simSeries(st), r=simCalc(st);
+  CH.sim = new Chart(el,{type:'line', data:{datasets:[
+    {label:L('Without Series A','不认购 A 轮'), data:d.no, borderColor:'#8A97A8', borderWidth:st.part?1.6:3, pointRadius:0, tension:.2},
+    {label:L('With Series A pro-rata','认购 A 轮'), data:d.yes, borderColor:'#1C2B4A', borderWidth:st.part?3:1.6, pointRadius:0, tension:.2},
+    {label:L('Your scenario','你的情景'), data:[{x:st.mult,y:r.pay/1000}], type:'scatter', pointRadius:8, pointHoverRadius:9, pointBackgroundColor:'#C8892E', pointBorderColor:'#fff', pointBorderWidth:3}
+  ]}, options:{responsive:true, maintainAspectRatio:false, interaction:{mode:'nearest',intersect:false},
+    plugins:{legend:{position:'bottom', labels:{usePointStyle:true, pointStyle:'line', boxWidth:24, font:{family:'Inter',size:12}, color:'#3E4A5C'}}, tooltip:Object.assign({},TT,{callbacks:{title:c=>`${(+c[0].parsed.x).toFixed(1)}x ${L('revenue','营收')}`, label:c=>` ${c.dataset.label}: ${money(Math.round(c.parsed.y*1000))}`}})},
+    scales:{x:{type:'linear', min:0.6, max:3.2, grid:{color:'#F3EEE5'}, border:{display:false}, ticks:{color:'#8A97A8', font:{family:'Inter'}, callback:v=>(+v).toFixed(1)+'x'}, afterBuildTicks:ax=>{ ax.ticks=[0.6,1.0,1.4,1.8,2.2,2.6,3.0].map(v=>({value:v})); }, title:{display:true, text:L('Sale value (× revenue)','出售估值（× 营收）'), color:'#8A97A8', font:{family:'Inter',size:11.5}}},
+      y:{beginAtZero:true, grid:{color:'#EFEAE0'}, border:{display:false}, ticks:{color:'#8A97A8', font:{family:'Inter'}, callback:v=>'$'+num(v)+'K', maxTicksLimit:6}}}, animation:{duration:600}}});
+}
+/* mount & count-up */
+function countUp(){
+  if(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  document.querySelectorAll('#content .kpi .val, #content .numl, #content .snap b').forEach(el=>{
+    if(el.closest('[data-nocount]') || el.children.length) return;
+    const txt=el.textContent.trim(), m=txt.match(/^([+\-−]?\$?)([\d,]+(?:\.\d+)?)(M|K|%|x| pts)?$/); if(!m) return;
+    const target=parseFloat(m[2].replace(/,/g,'')), dec=(m[2].split('.')[1]||'').length, comma=m[2].includes(','), t0=performance.now(), dur=900;
+    const fmt=v=>{ let s=v.toFixed(dec); if(comma){ const [a,b]=s.split('.'); s=Number(a).toLocaleString('en-US')+(b?'.'+b:''); } return m[1]+s+(m[3]||''); };
+    const step=t=>{ const p=Math.min(1,(t-t0)/dur), e=1-Math.pow(1-p,3); el.textContent=fmt(target*e); if(p<1) requestAnimationFrame(step); else el.textContent=txt; };
+    el.textContent=fmt(0); requestAnimationFrame(step);
+  });
+}
+function mountCharts(){
+  Object.keys(CH).forEach(k=>{ try{ CH[k].destroy(); }catch(e){} delete CH[k]; });
+  if(window.Chart){
+    Chart.defaults.font.family = 'Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif';
+    drawTrend(); drawMix(); drawMem(); drawSim();
+  }
+  if(document.getElementById('c-sim')) updateSim();
+  countUp();
+}
+
+/* ---------------- roles & nav ---------------- */
+const ROLES = {
+  visitor:{n:'', t:{en:'Visitor',zh:'访客'}, d:{en:'The public company page anyone can see. No investment terms are shown here.',zh:'任何人都能看到的公开页面，不展示任何融资条款。'}, ic:'globe'},
+  prospect:{n:'Alex Morgan', t:{en:'Prospective investor',zh:'意向投资人'}, d:{en:'Invite-only data room: round terms, deck, financials, Q&A, book a call.',zh:'受邀资料室：本轮条款、演示文稿、财务、问答、预约通话。'}, ic:'key', area:{en:'Data Room',zh:'投资人资料室'}},
+  investor:{n:'Daniel Chen', t:{en:'Shareholder',zh:'股东'}, d:{en:'My holdings, company performance, reports, Q&A, documents, meetings and votes.',zh:'我的持股、经营数据、报告、问答、文件、股东会与投票。'}, ic:'pie', area:{en:'Shareholder Portal',zh:'股东门户'}},
+  director:{n:'Grace Park', t:{en:'Board director',zh:'董事'}, d:{en:'Everything a shareholder sees, plus the confidential Board Room.',zh:'股东可见的全部内容，外加保密的董事会专区。'}, ic:'gavel', area:{en:'Board & Shareholder Portal',zh:'董事与股东门户'}},
+  admin:{n:'James Okafor', t:{en:'CFO · Administrator',zh:'财务长 · 管理员'}, d:{en:'Shareholder registry, round pipeline, publishing, Q&A inbox, permissions, read tracking.',zh:'股东名册、融资漏斗、发布、问答收件箱、权限、阅读追踪。'}, ic:'layers', area:{en:'Admin Console',zh:'管理后台'}}
+};
+const NAV = {
+  prospect:[
+    ['room',{en:'Overview',zh:'概览'},'home'],['terms',{en:'Round terms',zh:'本轮条款'},'money'],['deck',{en:'Investor deck',zh:'演示文稿'},'play'],
+    ['fin',{en:'Financials',zh:'财务摘要'},'chart'],['pdocs',{en:'Documents',zh:'文件'},'file'],['pqa',{en:'Q&A',zh:'问答'},'chat'],['call',{en:'Book a call',zh:'预约通话'},'phone']
+  ],
+  investor:[
+    ['overview',{en:'Overview',zh:'总览'},'home'],['holdings',{en:'My holdings',zh:'我的持股'},'pie'],['sim',{en:'Return simulator',zh:'回报模拟器'},'sliders'],['perf',{en:'Performance',zh:'经营表现'},'chart'],
+    ['reports',{en:'Reports',zh:'报告'},'report'],['news',{en:'Announcements',zh:'公告'},'bell'],['qa',{en:'Ask a question',zh:'我要提问'},'chat'],
+    ['docs',{en:'My documents',zh:'我的文件'},'file'],['meet',{en:'Meetings & votes',zh:'股东会与投票'},'cal']
+  ],
+  admin:[
+    ['dash',{en:'Dashboard',zh:'仪表盘'},'home'],['registry',{en:'Shareholders',zh:'股东名册'},'users'],['rounds',{en:'Funding rounds',zh:'历轮融资'},'layers'],
+    ['pipeline',{en:'Series A pipeline',zh:'A轮意向漏斗'},'kanban'],['publish',{en:'Publish update',zh:'发布公告'},'send'],['inbox',{en:'Q&A inbox',zh:'问答收件箱'},'inbox'],
+    ['perms',{en:'Documents & access',zh:'文件与权限'},'lock'],['reads',{en:'Read tracking',zh:'阅读追踪'},'eye']
+  ]
+};
+NAV.director = NAV.investor.concat([['board',{en:'Board Room',zh:'董事会专区'},'gavel']]);
+
+/* ---------------- shared state helpers ---------------- */
+const posts = () => DB.get('posts', []);
+const allNews = aud => posts().filter(p=>aud==='bd' ? (p.aud==='sh'||p.aud==='bd') : p.aud===aud).concat(aud==='pr'?[]:NEWS0);
+const qaSh = () => QA0.map(q=>{ const r=DB.get('reply_'+q.id,null); return r?Object.assign({},q,r,{due:null}):q; }).concat(DB.get('myqa',[]).map(q=>{ const r=DB.get('reply_'+q.id,null); return r?Object.assign({},q,r,{due:null}):q; }));
+const qaPr = () => PQA0.concat(DB.get('prqa',[]).map(q=>{ const r=DB.get('reply_'+q.id,null); return r?Object.assign({},q,r,{due:null}):q; }));
+const openQs = () => qaSh().concat(qaPr()).filter(q=>!q.a);
+const readCount = () => 47 + (DB.get('readq3',false)?1:0);
+const unreadNews = () => allNews('sh').filter(n=>!DB.get('seen_'+n.id,false)).length;
+
+/* ---------------- router ---------------- */
+function route(){
+  const h = location.hash.replace(/^#\/?/,'');
+  const [a,b] = h.split('/');
+  document.body.classList.remove('nav-open');
+  const md=document.getElementById('modal'); if(md) md.innerHTML='';
+  if(a==='login') return renderLogin();
+  if(a==='p'){
+    if(!S.role || S.role==='visitor'){ location.hash='#/login'; return; }
+    const nav = NAV[S.role]; const key = nav.find(x=>x[0]===b) ? b : nav[0][0];
+    return renderPortal(key);
+  }
+  return renderPublic();
+}
+window.addEventListener('hashchange', ()=>{ route(); window.scrollTo(0,0); });
+
+function demobar(){
+  const who = S.role && S.role!=='visitor' ? `${L('Viewing as','当前身份')} <b>${esc(T(ROLES[S.role].t))}</b> · ` : '';
+  return `<div class="demobar"><div class="wrap"><span><b>Stakely</b> · ${L('Demo','演示')}<span class="long"> · ${L('Interactive demo with a fictional company. All names and numbers are made up.','交互演示，公司为虚构，所有人名和数字均为示例。')}</span></span><span>${who}<a href="#/login">${L('Switch role →','切换身份 →')}</a></span></div></div>`;
+}
+const langBtn = (dark) => `<button class="lang ${dark?'dark':''}" data-act="lang" aria-label="Switch language">${S.lang==='en'?'中文':'EN'}</button>`;
+
+/* ============================================================
+   PUBLIC PAGE
+   ============================================================ */
+function renderPublic(){
+  const r = DB.get('pubread',null);
+  document.title = `${CO.full} — ${L('Company & Investor Relations','公司与投资者关系')}`;
+  app.innerHTML = demobar() + `
+  <header class="hero" style="background-image:url('${IMG.hero}')">
+  <nav class="pnav"><div class="wrap">
+    <a class="brand" href="#/"><span class="mark">${CO.mark}</span><span><span class="nm">${CO.name}</span><div class="sub">${L('Bakery Café · Austin','烘焙咖啡 · 奥斯汀')}</div></span></a>
+    <ul><li><a href="#story" data-act="anchor" data-to="story">${L('Our story','品牌故事')}</a></li><li><a href="#stores" data-act="anchor" data-to="stores">${L('Stores','门店')}</a></li><li><a href="#team" data-act="anchor" data-to="team">${L('Team','团队')}</a></li><li><a href="#news" data-act="anchor" data-to="news">${L('News','动态')}</a></li><li><a href="#faq" data-act="anchor" data-to="faq">FAQ</a></li></ul>
+    <div class="right">${langBtn(true)}<a class="btn btn-gold btn-sm" href="#/login">${ic('lock',15)} ${L('Investor sign in','投资人登录')}</a></div>
+  </div></nav>
+  <div class="wrap">
+    <div class="eyebrow">${L('Hearth & Grain Bakery Café · Austin, Texas','Hearth & Grain 烘焙咖啡 · 德州奥斯汀')}</div>
+    <h1>${L('Bread worth <em>gathering</em> for.','值得为它<em>相聚</em>的面包。')}</h1>
+    <p class="lead">${L('Three neighborhood bakery cafés, long-fermented sourdough made from Texas wheat, and a growing community of owners who believe in it.','三家社区烘焙咖啡馆，用德州小麦长时间发酵的酸种面包，以及一群越来越多、真心相信它的股东。')}</p>
+    <div class="ctas"><a class="btn btn-gold" href="#story" data-act="anchor" data-to="story">${L('Read our story','了解品牌故事')}</a><a class="btn btn-ghost" href="#interest" data-act="anchor" data-to="interest">${L('Register investor interest','登记投资意向')}</a></div>
+    <div class="facts"><div><b>3</b><span>${L('Neighborhood stores','社区门店')}</span></div><div><b>8,400</b><span>${L('Loyalty members','会员')}</span></div><div><b>2021</b><span>${L('First oven lit','第一炉面包')}</span></div><div><b>10</b><span>${L('Stores planned by 2029','2029 年计划门店数')}</span></div></div>
+  </div></header>
+
+  <section class="sec" id="story"><div class="wrap split">
+    <div class="img"><img src="${IMG.flat}" alt="${L('Sourdough loaves, croissants and coffee on linen','亚麻桌布上的酸种面包、可颂和咖啡')}" loading="lazy"></div>
+    <div>
+      <div class="eyebrow">${L('Our story','品牌故事')}</div>
+      <h2>${L('Started with one oven and a 36-hour dough.','从一台烤炉和一团 36 小时的面团开始。')}</h2>
+      <p class="lead">${L('Emily Hart spent fifteen years in restaurant kitchens before opening a 900-square-foot bakery on South Congress in 2021. The line on the first Saturday went around the block. It has not really stopped since.','Emily Hart 在餐厅后厨工作了十五年，2021 年在南国会街开了一家 900 平方英尺的小面包店。开业第一个周六，排队绕了整条街，此后基本没停过。')}</p>
+      <div class="values">
+        <div><span class="n">01</span><div><h3>${L('Slow by design','刻意慢下来')}</h3><p>${L('Every loaf ferments for at least 36 hours. Fewer ingredients, more time.','每个面包至少发酵 36 小时。配料更少，时间更多。')}</p></div></div>
+        <div><span class="n">02</span><div><h3>${L('Texas grain','德州谷物')}</h3><p>${L('Flour from two family mills within 200 miles of Austin.','面粉来自奥斯汀 200 英里内的两家家庭磨坊。')}</p></div></div>
+        <div><span class="n">03</span><div><h3>${L('A room for the neighborhood','给社区的一间屋子')}</h3><p>${L('Long tables, real cups, and no rush to leave.','长桌、真杯子，没人催你离开。')}</p></div></div>
+      </div>
+    </div>
+  </div></section>
+
+  <section class="sec alt" id="stores"><div class="wrap">
+    <div class="split rev">
+      <div>
+        <div class="eyebrow">${L('Stores & growth','门店与发展')}</div>
+        <h2>${L('Three neighborhoods today. Ten by 2029.','今天三个社区，2029 年十个。')}</h2>
+        <p class="lead">${L('Each new store is chosen the same way: a walkable street, a morning crowd, and a neighborhood that does not yet have a bakery it loves.','每家新店都按同样的标准选址：适合步行的街道、早晨有人流、还没有一家让人爱上的面包店。')}</p>
+        <div class="stores">
+          ${STORES.map(s=>`<div class="row"><b>${s.n}</b><span>${L('Since','开业于')} ${s.y}</span></div>`).join('')}
+          <div class="row next"><b>East Austin</b><span>${L('Opening early 2027','2027 年初开业')}</span></div>
+        </div>
+      </div>
+      <div class="img"><img src="${IMG.store}" alt="${L('Bakery café storefront at dusk','黄昏时的烘焙咖啡店门面')}" loading="lazy"></div>
+    </div>
+    <div class="road">
+      <div class="now"><b>3</b><span>2026</span></div><div><b>6</b><span>2027</span></div><div><b>8</b><span>2028</span></div><div><b>10</b><span>2029</span></div>
+    </div>
+  </div></section>
+
+  <section class="sec" id="team"><div class="wrap">
+    <div class="eyebrow">${L('Leadership','管理团队')}</div>
+    <h2>${L('Bakers, operators, and a CFO who reads every line.','面包师、运营者，和一位每行数字都看的财务长。')}</h2>
+    <div class="team">
+      ${[['EH','Emily Hart',{en:'Founder & CEO',zh:'创始人兼 CEO'},{en:'Fifteen years in restaurant kitchens, including head baker at two of Austin’s best-known restaurants.',zh:'十五年餐厅后厨经验，曾在奥斯汀两家知名餐厅担任首席面包师。'}],
+         ['SR','Sofia Ramirez',{en:'Co-founder & COO',zh:'联合创始人兼运营长'},{en:'Opened 14 locations for a regional café group. Runs stores, people and the new-store playbook.',zh:'曾为一家区域咖啡集团开出 14 家门店，负责门店、团队和开店标准流程。'}],
+         ['JO','James Okafor',{en:'CFO',zh:'财务长'},{en:'CPA. Ten years in restaurant finance. Builds the monthly numbers every shareholder sees.',zh:'注册会计师，十年餐饮财务经验，负责每位股东看到的月度数字。'}]
+        ].map(p=>`<div class="person"><div class="avatar">${p[0]}</div><h3>${p[1]}</h3><div class="role">${T(p[2])}</div><p>${T(p[3])}</p></div>`).join('')}
+    </div>
+    <div class="teamimg"><img src="${IMG.team}" alt="${L('Leadership team reviewing plans','管理团队讨论计划')}" loading="lazy"></div>
+  </div></section>
+
+  <section class="sec alt" id="news"><div class="wrap">
+    <div class="eyebrow">${L('News','动态')}</div>
+    <h2>${L('From the bakery','来自面包店的消息')}</h2>
+    <div class="news">${PUBNEWS.map(n=>`<article><time>${fdate(n.d)}</time><h3>${T(n.t)}</h3><p>${T(n.b)}</p></article>`).join('')}</div>
+  </div></section>
+
+  <section class="sec" id="faq"><div class="wrap">
+    <div class="eyebrow">FAQ</div>
+    <h2>${L('Questions we hear often','常见问题')}</h2>
+    <div class="faq">
+      ${[[{en:'Can I invest in Hearth & Grain?',zh:'我可以投资 Hearth & Grain 吗？'},{en:'Information about investment opportunities is shared only with invited, verified investors through our private investor portal. If you are interested, register below and our team will follow up.',zh:'投资相关信息只通过私密的投资人门户，提供给受邀并经过确认的投资人。如果你有兴趣，请在下方登记，团队会与你联系。'}],
+         [{en:'I am already a shareholder. Where do I find my documents?',zh:'我已经是股东，去哪里找我的文件？'},{en:'Sign in to the shareholder portal. Your agreements, share certificates, statements and every report are there, available any time.',zh:'登录股东门户。你的协议、股权证书、对账单和所有报告都在那里，随时可以查看。'}],
+         [{en:'How often do shareholders get updates?',zh:'股东多久收到一次更新？'},{en:'A short monthly update, a full quarterly report with financials, and an annual shareholder meeting. Questions can be asked in the portal at any time.',zh:'每月一份简报，每季度一份含财务数据的完整报告，每年一次股东大会。任何时候都可以在门户里提问。'}],
+         [{en:'Do you franchise?',zh:'你们做加盟吗？'},{en:'No. Every store is company-owned so we can protect the bread and the experience.',zh:'不做。每家店都是直营，这样才能守住面包和体验的品质。'}]
+        ].map(f=>`<details><summary>${T(f[0])}</summary><p>${T(f[1])}</p></details>`).join('')}
+    </div>
+  </div></section>
+
+  <section class="sec interest" id="interest"><div class="wrap split">
+    <div>
+      <div class="eyebrow">${L('Investor relations','投资者关系')}</div>
+      <h2>${L('Interested in owning a piece of the bakery?','想成为面包店的股东之一？')}</h2>
+      <p class="lead">${L('Leave your details. If there is a fit, our CFO will invite you to the private data room, where round details and financials are shared.','留下你的信息。如果合适，我们的财务长会邀请你进入私密资料室，在那里提供融资细节和财务数据。')}</p>
+    </div>
+    <form class="formcard" data-form="interest">
+      ${r ? `<div class="notice navy">${ic('check')} <span>${L('Thank you, ','谢谢，')}${esc(r)}${L('. Your interest is registered. In this demo, sign in as Administrator to see it in the Series A pipeline.','。你的意向已登记。在这个演示里，以"管理员"身份登录，可以在 A 轮意向漏斗里看到它。')}</span></div>` : ''}
+      <div class="field"><label>${L('Full name','姓名')}</label><input name="name" required maxlength="80" autocomplete="name"></div>
+      <div class="field"><label>${L('Email','邮箱')}</label><input name="email" type="email" required maxlength="120" autocomplete="email"></div>
+      <div class="field"><label>${L('I am investing as','投资身份')}</label><select name="type"><option value="Individual">${L('An individual','个人')}</option><option value="Family office">${L('A family office','家族办公室')}</option><option value="Fund">${L('A fund or company','基金或公司')}</option></select></div>
+      <label class="check"><input type="checkbox" required> <span>${L('I understand this is not an offer to sell securities. Details are shared only with invited, verified investors.','我理解这不是证券销售要约。详细信息只提供给受邀并经过确认的投资人。')}</span></label>
+      <input name="website" class="hide" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <button class="btn btn-navy" style="width:100%">${L('Register interest','登记意向')}</button>
+      <p class="disc">${L('Demo form: entries are saved only in your own browser and are never sent anywhere.','演示表单：信息只保存在你自己的浏览器里，不会发送到任何地方。')}</p>
+    </form>
+  </div></section>
+
+  <footer class="pfoot"><div class="wrap">
+    <div><a class="brand" href="#/"><span class="mark">${CO.mark}</span><span class="nm">${CO.name}</span></a>
+    <p>${L('Hearth & Grain is a fictional company created to demonstrate Stakely. Nothing on this site is an offer to sell or a solicitation to buy securities.','Hearth & Grain 是为演示 Stakely 而虚构的公司。本网站任何内容都不构成证券销售要约或购买邀约。')}</p></div>
+    <div><p style="margin-top:0">${L('Investor portal powered by','投资人门户由')} <b style="color:#fff">Stakely</b>${L('',' 提供')}<br>${L('Demo designed & built by Ryan Yan, data analyst','演示设计与开发：Ryan Yan，数据分析师')}</p><p><a href="#/login">${L('Investor sign in →','投资人登录 →')}</a></p></div>
+  </div></footer>`;
+}
+
+/* ============================================================
+   LOGIN — role picker
+   ============================================================ */
+function renderLogin(){
+  document.title = `Stakely — ${L('Sign in','登录')}`;
+  app.innerHTML = demobar() + `<div class="login">
+    <div class="art" style="background-image:url('${IMG.team}')">
+      <a class="brand" href="#/" style="color:#fff"><span class="mark">S</span><span><span class="nm">Stakely</span><div class="sub">${L('Investor relations for private companies','私营公司的投资者关系平台')}</div></span></a>
+      <div>
+        <div class="eyebrow">${L('One place for every shareholder','所有股东，一个地方')}</div>
+        <h1>${L('Fewer meetings. More trust.','少开会，多信任。')}</h1>
+        <p>${L('Reports, holdings, questions, documents and votes — for the public, prospective investors, shareholders, the board and your finance team, each seeing only what they should.','报告、持股、问答、文件和投票 —— 公众、意向投资人、股东、董事会和财务团队，每个人只看到该看的内容。')}</p>
+      </div>
+      <div class="small" style="opacity:.7">${L('Demo company: Hearth & Grain Bakery Café (fictional)','演示公司：Hearth & Grain Bakery Café（虚构）')}</div>
+    </div>
+    <div class="pick">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px"><div class="eyebrow">${L('Demo sign in','演示登录')}</div>${langBtn(false)}</div>
+      <h2>${L('Choose who you want to be','选择一个身份进入')}</h2>
+      <p class="muted">${L('Each role sees a different part of the same portal.','每个身份看到的是同一个门户的不同部分。')}</p>
+      <div class="roles">
+        ${Object.entries(ROLES).map(([k,r])=>`<button class="rolecard" data-act="role" data-role="${k}"><span class="ic">${ic(r.ic,22)}</span><span><b>${T(r.t)}${r.n?` · <span style="display:inline;color:var(--ink-2);font-weight:500">${r.n}</span>`:''}</b><span>${T(r.d)}</span></span><span class="go">→</span></button>`).join('')}
+      </div>
+      <div class="prodlogin">${ic('shield',20)}<span>${L('In a live deployment, each person signs in with their own email, password and two-factor code, and every document is watermarked with their name.','正式上线时，每个人用自己的邮箱、密码和双重验证码登录，每份文件都会打上查看人的姓名水印。')}</span></div>
+      <p class="small muted" style="margin-top:18px"><a href="#" data-act="reset" style="color:var(--gold)">${L('Reset demo data','重置演示数据')}</a></p>
+    </div>
+  </div>`;
+}
+
+/* ============================================================
+   PORTAL SHELL
+   ============================================================ */
+function renderPortal(key){
+  const role = S.role, R = ROLES[role], nav = NAV[role];
+  const title = T(nav.find(x=>x[0]===key)[1]);
+  document.title = `${title} — ${CO.name} · Stakely`;
+  const badges = {news: unreadNews(), inbox: openQs().length};
+  let grp = '';
+  const navHtml = nav.map(([k,lbl,i])=>{
+    let pre = '';
+    if(k==='board'){ pre = `<div class="grp">${L('Board only','董事专属')}</div>`; }
+    const b = badges[k] ? `<span class="badge">${badges[k]}</span>` : '';
+    return pre + `<a href="#/p/${k}" class="${k===key?'on':''}">${ic(i)} ${T(lbl)} ${b}</a>`;
+  }).join('');
+  app.innerHTML = demobar() + `<div class="shell">
+    <aside class="side">
+      <div class="top"><a class="brand" href="#/"><span class="mark">${CO.mark}</span><span><span class="nm">${CO.name}</span><div class="sub">via Stakely</div></span></a><div class="area">${T(R.area)}</div></div>
+      <nav>${navHtml}</nav>
+      <div class="me"><span class="avatar">${R.n.split(' ').map(x=>x[0]).join('')}</span><span><b>${R.n}</b><span>${T(R.t)}</span></span></div>
+      <div class="acts"><a class="btn" href="#/login">${ic('swap',14)} ${L('Switch','切换')}</a><a class="btn" href="#/" data-act="logout">${ic('out',14)} ${L('Sign out','退出')}</a></div>
+    </aside>
+    <main class="mainp">
+      <div class="topbar"><div style="display:flex;align-items:center;gap:12px"><button class="menu-btn" data-act="menu" aria-label="Menu">${ic('menu',20)}</button><div class="tt"><h1>${title}</h1><div class="tsub">${role==='prospect' ? `${ic('lock',12)} ${L('Confidential · shared with Alex Morgan','保密 · 仅向 Alex Morgan 开放')}` : role==='admin' ? `<i></i>${L('All systems synced · today 6:00 AM','所有系统已同步 · 今天 6:00')}` : `<i></i>${L('Data as of Oct 31, 2026 · synced from POS & accounting','数据截至 2026年10月31日 · 自动同步自 POS 与会计系统')}`}</div></div></div>
+      <div class="r"><span class="chip navy">${ic('lock',13)} ${L('Private','私密')}</span>${langBtn(false)}</div></div>
+      <div class="content" id="content">${VIEWS[key] ? VIEWS[key]() : ''}<div class="foot-note">${L('Demo data. Hearth & Grain is fictional. In production, numbers sync from the company’s POS and accounting systems.','演示数据，Hearth & Grain 为虚构公司。正式使用时，数字从公司的 POS 和会计系统自动同步。')}</div></div>
+    </main>
+  </div>`;
+  if(key==='news') allNews(role==='director'?'bd':'sh').forEach(n=>DB.set('seen_'+n.id,true));
+  mountCharts();
+}
+
+/* ---------------- charts & components ---------------- */
+const st = (k, pill) => `<span class="st ${k} ${pill?'pill':''}"><i></i>${k==='ok'?L('On track','达标'):k==='watch'?L('Watch','需关注'):L('Below plan','未达标')}</span>`;
+const tip = k => `<button class="tip" type="button" data-act="tip" data-k="${k}" aria-label="${L('Explain this term','解释这个术语')}">?</button>`;
+function spark(arr, color){
+  const w=92,h=30,mn=Math.min(...arr),mx=Math.max(...arr),rg=(mx-mn)||1;
+  const pts=arr.map((v,i)=>`${(i/(arr.length-1)*w).toFixed(1)},${(h-3-(v-mn)/rg*(h-8)).toFixed(1)}`);
+  const last=pts[pts.length-1].split(',');
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" aria-hidden="true"><polyline points="${pts.join(' ')}" fill="none" stroke="${color||'#1C2B4A'}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${last[0]}" cy="${last[1]}" r="2.6" fill="${color||'#1C2B4A'}"/></svg>`;
+}
+const metric = o => `<div class="card kpi ${o.cls||''}"><div class="kt"><span class="lbl">${o.lbl}${o.tip?tip(o.tip):''}</span>${o.st?st(o.st):''}</div><div class="kv"><span class="val">${o.val}</span>${o.spark?spark(o.spark,o.sc):''}</div><div class="sub">${o.delta?`<span class="delta ${o.delta[1]}">${o.delta[0]}</span>`:''}<span>${o.sub||''}</span></div></div>`;
+function barChart(){
+  const W=760,H=300,pl=46,pr=10,pt=26,pb=34,max=500,n=12,cw=(W-pl-pr)/n,bw=cw*.52;
+  const y=v=>pt+(H-pt-pb)*(1-v/max);
+  let g='';
+  [0,100,200,300,400,500].forEach(t=>{ g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(t)}" y2="${y(t)}" stroke="${t?'#EFEAE0':'#D9D1C1'}"/><text x="${pl-10}" y="${y(t)+4}" text-anchor="end" font-size="11" fill="#8A97A8">${t?'$'+t+'K':'$0'}</text>`; });
+  const cx=i=>pl+cw*i+cw/2;
+  ACT.forEach((a,i)=>{
+    const miss=a<PLAN[i], v=((a/PLAN[i]-1)*100).toFixed(1);
+    g+=`<rect x="${cx(i)-bw/2}" y="${y(a)}" width="${bw}" height="${y(0)-y(a)}" rx="4" fill="${miss?'#B8574A':'#1C2B4A'}" opacity="${i===11?1:.9}"><title>${T(MLBL)[i]}: ${L('actual','实际')} $${a}K · ${L('plan','计划')} $${PLAN[i]}K (${a>=PLAN[i]?'+':''}${v}%)</title></rect>`;
+    g+=`<text x="${cx(i)}" y="${y(a)-7}" text-anchor="middle" font-size="10.5" font-weight="600" fill="${miss?'#A84B3A':'#3E4A5C'}">${a}</text>`;
+    g+=`<text x="${cx(i)}" y="${H-12}" text-anchor="middle" font-size="11.5" fill="#3E4A5C">${T(MLBL)[i]}</text>`;
+  });
+  g+=`<polyline points="${PLAN.map((p,i)=>cx(i)+','+y(p)).join(' ')}" fill="none" stroke="#C8892E" stroke-width="2" stroke-dasharray="5 4"/>`;
+  PLAN.forEach((p,i)=>{ g+=`<circle cx="${cx(i)}" cy="${y(p)}" r="3" fill="#fff" stroke="#C8892E" stroke-width="1.8"/>`; });
+  return `<div class="chart"><div class="cscroll"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${L('Monthly revenue in thousands of dollars, actual bars versus plan line','月度营收（千美元）：实际柱状对比计划折线')}">${g}</svg></div>
+  <div class="legend"><span><i style="background:#1C2B4A"></i>${L('Actual ($K)','实际（千美元）')}</span><span><i style="background:#B8574A"></i>${L('Below plan','低于计划')}</span><span><i style="background:transparent;border:2px dashed #C8892E;height:0;width:16px;border-radius:0;vertical-align:3px"></i>${L('Plan','计划')}</span></div></div>`;
+}
+function ytdBlock(){
+  const v=((YTD_ACT/YTD_PLAN-1)*100).toFixed(1), prog=YTD_ACT/FYPLAN, el=10/12;
+  return `<div class="progress-head"><span class="small muted">${L('2026 year to date (Jan–Oct)','2026 年初至今（1–10月）')}</span><span class="delta up">+${v}% ${L('vs plan','对比计划')}</span></div>
+  <div style="display:flex;gap:10px;align-items:baseline"><span class="numl navy">$${(YTD_ACT/1000).toFixed(2)}M</span><span class="small muted">${L('of $4.86M full-year plan','/ 全年计划 486 万')}</span></div>
+  <div class="ytd"><i style="width:${prog*100}%"></i><em style="left:${el*100}%"></em></div>
+  <div class="small muted">${pct(prog,0)} ${L('of the annual plan reached','的全年计划已完成')} · <span style="color:var(--gold)">|</span> ${pct(el,0)} ${L('of the year elapsed — December is the biggest month','的时间已过去 — 12 月是全年最旺的月份')}</div>`;
+}
+const mY = iso => { const d=new Date(iso+'T12:00:00'); return S.lang==='zh' ? `${d.getFullYear()}年${d.getMonth()+1}月` : d.toLocaleDateString('en-US',{month:'short',year:'numeric'}); };
+function valueChart(H){
+  const pos=H.pos.slice().sort((a,b)=>a.d<b.d?-1:1); let cs=0,cc=0; const pts=[];
+  pts.push({lb:L('Start','起点'),c:0,v:0});
+  pos.forEach(p=>{ cs+=p.sh; cc+=p.inv; pts.push({lb:mY(p.d),c:cc,v:cs*p.p,r:T(p.r).split(' ·')[0]}); });
+  pts.push({lb:L('Series A (if closed)','A 轮（如完成）'),c:cc,v:cs*PRICE.a,pf:true});
+  const W=640,Hh=250,pl=58,pr=76,pt=30,pb=40, mx=Math.max(...pts.map(p=>p.v))*1.18;
+  const x=i=>pl+(W-pl-pr)*i/(pts.length-1), y=v=>pt+(Hh-pt-pb)*(1-v/mx);
+  let g='';
+  [0,.25,.5,.75,1].forEach(f=>{ const v=mx*f; g+=`<line x1="${pl}" x2="${W-pr}" y1="${y(v)}" y2="${y(v)}" stroke="#EFEAE0"/><text x="${pl-10}" y="${y(v)+4}" text-anchor="end" font-size="11" fill="#8A97A8">$${Math.round(v/1000)}K</text>`; });
+  const solid=pts.slice(0,-1), last=pts.length-1;
+  g+=`<path d="M${x(0)},${y(0)} ${solid.map((p,i)=>`L${x(i)},${y(p.v)}`).join(' ')} L${x(solid.length-1)},${y(0)} Z" fill="rgba(28,43,74,.07)"/>`;
+  g+=`<polyline points="${pts.map((p,i)=>`${x(i)},${y(p.c)}`).join(' ')}" fill="none" stroke="#8A97A8" stroke-width="1.6" stroke-dasharray="3 4"/>`;
+  g+=`<polyline points="${solid.map((p,i)=>`${x(i)},${y(p.v)}`).join(' ')}" fill="none" stroke="#1C2B4A" stroke-width="2.4"/>`;
+  g+=`<line x1="${x(last-1)}" y1="${y(pts[last-1].v)}" x2="${x(last)}" y2="${y(pts[last].v)}" stroke="#C8892E" stroke-width="2.4" stroke-dasharray="6 5"/>`;
+  pts.forEach((p,i)=>{ if(i===0) return;
+    g+=`<circle cx="${x(i)}" cy="${y(p.v)}" r="4.5" fill="${p.pf?'#fff':'#1C2B4A'}" stroke="${p.pf?'#C8892E':'#1C2B4A'}" stroke-width="2"/>`;
+    g+=`<text x="${x(i)}" y="${y(p.v)-12}" text-anchor="middle" font-size="12" font-weight="700" fill="${p.pf?'#9A6A1C':'#1C2B4A'}">${money(p.v)}</text>`; });
+  pts.forEach((p,i)=>{ g+=`<text x="${x(i)}" y="${Hh-18}" text-anchor="middle" font-size="11" fill="#3E4A5C">${p.lb}</text>${p.r?`<text x="${x(i)}" y="${Hh-4}" text-anchor="middle" font-size="10.5" fill="#8A97A8">${p.r}</text>`:''}`; });
+  return `<div class="chart"><div class="cscroll"><svg viewBox="0 0 ${W} ${Hh}" role="img" aria-label="${L('Value of your investment compared with the amount invested','你的投资价值对比投入金额')}" style="min-width:520px">${g}</svg></div>
+  <div class="legend"><span><i style="background:#1C2B4A"></i>${L('Value at each round price','按每轮价格计算的价值')}</span><span><i style="background:transparent;border-top:2px dashed #8A97A8;height:0;width:16px;border-radius:0;vertical-align:3px"></i>${L('Amount invested','投入金额')}</span><span><i style="background:transparent;border-top:2px dashed #C8892E;height:0;width:16px;border-radius:0;vertical-align:3px"></i>${L('If the Series A closes at $1.70','若 A 轮按 1.70 美元完成')}</span></div></div>`;
+}
+function tractionChart(){
+  const d=[['2023',1.9],['2024',3.1],['2025',4.4],[L('TTM','近12月'),4.87],['2027E',8.2]];
+  const W=340,H=280,pl=6,pb=30,pt=26,mx=9,cw=(W-pl*2)/d.length,bw=cw*.56,y=v=>pt+(H-pt-pb)*(1-v/mx);
+  let g=`<line x1="${pl}" x2="${W-pl}" y1="${y(0)}" y2="${y(0)}" stroke="#D9D1C1"/>`;
+  d.forEach((r,i)=>{ const cx=pl+cw*i+cw/2, e=i===d.length-1;
+    g+=`<rect x="${cx-bw/2}" y="${y(r[1])}" width="${bw}" height="${y(0)-y(r[1])}" rx="4" fill="${e?'#fff':i===3?'#C8892E':'#1C2B4A'}" stroke="${e?'#C8892E':'none'}" stroke-dasharray="${e?'5 4':''}" stroke-width="1.6"/>`;
+    g+=`<text x="${cx}" y="${y(r[1])-7}" text-anchor="middle" font-size="12.5" font-weight="700" fill="${e?'#9A6A1C':'#1C2B4A'}">$${r[1]}M</text><text x="${cx}" y="${H-10}" text-anchor="middle" font-size="12" fill="#3E4A5C">${r[0]}</text>`; });
+  return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto" role="img" aria-label="${L('Annual revenue history and 2027 estimate','历年营收与 2027 年预测')}">${g}</svg>`;
+}
+
+/* ---------------- reusable bits ---------------- */
+const kpi = (lbl,val,sub,cls='') => `<div class="card kpi ${cls}"><div class="lbl">${lbl}</div><div class="val">${val}</div>${sub?`<div class="sub">${sub}</div>`:''}</div>`;
+const coBanner = () => `<div class="co-banner"><div class="l"><span class="mark">${CO.mark}</span><div><b>${CO.full}</b><div class="small muted">${L('Private company · Austin, Texas · 3 stores','私营公司 · 德州奥斯汀 · 3 家门店')}</div></div></div><span class="chip gold">${L('Series A open · closes Jan 31, 2027','A 轮进行中 · 2027年1月31日截止')}</span></div>`;
+const docRow = (d, aud) => `<div class="item"><span class="fileic">${ic('file')}</span><div><div class="t">${T(d.n)}</div><div class="m">${d.k} · ${d.sz} · ${fdate(d.d)}</div></div><button class="btn btn-line btn-sm" data-act="doc" data-name="${esc(T(d.n))}">${ic('eye',14)} ${L('View','查看')}</button></div>`;
+function threadHtml(q){
+  const ans = q.a ? `<div class="a"><b>${q.who}</b> <span class="muted small">· ${T(q.role)} · ${fdate(q.ad)}</span><div style="margin-top:6px">${esc(T(q.a))}</div></div>`
+    : `<div class="a" style="background:#FFFBF3"><span class="chip gold">${L('Assigned to','负责人')} ${q.who} · ${T(q.role)}</span> <span class="small muted">${q.due?L(`Reply due within ${q.due}h`,`${q.due} 小时内回复`):L('Reply due within 48h','48 小时内回复')}</span></div>`;
+  return `<div class="thread"><div class="q">${esc(T(q.q))}</div><div class="meta"><span>${L('Asked by','提问人')} ${esc(q.by)}</span><span>${fdate(q.d)}</span>${q.a?`<span class="chip ok">${ic('check',12)} ${L('Answered · shared with all','已回答 · 所有人可见')}</span>`:''}</div>${ans}</div>`;
+}
+function askForm(kind){
+  return `<form class="card" data-form="${kind}" style="margin-bottom:22px"><div class="hd"><h3>${L('Ask the company','向公司提问')}</h3><span class="small muted">${L('Answers are shared with all shareholders, so each question is answered once.','回答对所有股东可见，同一个问题只需回答一次。')}</span></div>
+  <div class="field"><textarea name="q" rows="3" required maxlength="500" placeholder="${L('e.g. How are food costs trending this quarter?','例如：本季度食材成本的趋势如何？')}"></textarea></div>
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><span class="small muted">${ic('users',14)} ${L('Routed automatically to the right person — finance to the CFO, stores to the COO.','自动分配给对应负责人：财务问题给财务长，门店问题给运营长。')}</span><button class="btn btn-navy btn-sm">${ic('send',14)} ${L('Submit question','提交问题')}</button></div></form>`;
+}
+
+/* ============================================================
+   VIEWS
+   ============================================================ */
+const VIEWS = {};
+VIEWS.sim = simView;
+
+/* ---------- Prospect: data room ---------- */
+function gate(){
+  return `<div class="gate"><div class="card">
+    <div class="eyebrow">${L('Private data room','私密资料室')}</div>
+    <h2>${L('Before you continue','进入前请确认')}</h2>
+    <p class="muted" style="margin-bottom:22px">${L('Round details are shared only with verified investors under confidentiality.','融资细节仅在保密前提下提供给经过确认的投资人。')}</p>
+    <form data-form="gate">
+      <label class="check"><input type="checkbox" required> <span>${L('I am an accredited investor as defined by SEC Rule 501 of Regulation D.','我是符合美国 SEC Regulation D 第 501 条定义的合格投资人。')}</span></label>
+      <label class="check"><input type="checkbox" required> <span>${L('I will keep the materials in this data room confidential.','我会对资料室中的材料保密。')}</span></label>
+      <label class="check"><input type="checkbox" required> <span>${L('I understand that projections are estimates and that investing in a private company involves risk, including loss of my entire investment.','我理解预测仅为估计，投资私营公司存在风险，包括可能损失全部投资。')}</span></label>
+      <button class="btn btn-navy" style="margin-top:6px">${L('Enter data room','进入资料室')} →</button>
+    </form>
+    <p class="disc">${L('In production this step can link to third-party accredited-investor verification.','正式上线时，这一步可以接入第三方合格投资人认证服务。')}</p>
+  </div></div>`;
+}
+const gated = fn => () => DB.get('gate',false) ? fn() : gate();
+
+VIEWS.room = gated(()=>{
+  const sv = softTotal(), me = pipe().find(p=>p.id==='p10');
+  return `
+  <div class="pagehd"><div><div class="eyebrow">${L('Investment summary · Series A','投资摘要 · A 轮')}</div><h2>${L('Hearth & Grain at a glance','一页看懂 Hearth & Grain')}</h2></div>
+  <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn btn-gold" data-act="commit">${me&&me.a?L('Update my indication','修改我的意向'):L('Indicate interest','表达投资意向')}</button><a class="btn btn-line" href="#/p/deck">${ic('play',14)} ${L('View deck','查看演示文稿')}</a></div></div>
+  <div class="snap">
+    <div><div class="lbl">${L('Raising','融资额')}</div><b>$5.0M</b><small>${L('Series A Preferred','A 轮优先股')}</small></div>
+    <div><div class="lbl">${L('Pre-money','投前估值')}${tip('premoney')}</div><b>$20M</b><small>$1.70 ${L('per share','每股')}</small></div>
+    <div><div class="lbl">${L('Soft-committed','意向承诺')}${tip('soft')}</div><b>${kM(sv)}</b><div class="bar" style="margin-top:8px"><i style="width:${Math.min(100,sv/50000)}%"></i></div></div>
+    <div><div class="lbl">${L('Minimum','起投')}</div><b>$50K</b><small>${L('accredited investors','合格投资人')}</small></div>
+    <div><div class="lbl">${L('Target close','目标截止')}</div><b>${L('Jan 31','1月31日')}</b><small>2027</small></div>
+  </div>
+  ${me&&me.a?`<div class="notice navy">${ic('check')} <span>${L('Your non-binding indication: ','你的不具约束力意向：')}<b>${money(me.a)}</b>. ${L('The CFO will follow up with subscription documents.','财务长会跟进发送认购文件。')}</span></div>`:''}
+  <div class="grid g-21" style="margin-bottom:24px">
+    <div class="card"><div class="hd"><h3>${L('Investment thesis','投资逻辑')}</h3></div><div class="thesis">
+      ${[[{en:'The business',zh:'生意本身'},{en:'Three company-owned bakery cafés in Austin. Long-fermented sourdough, pastries and coffee. 41% of sales come from 8,400 loyalty members.',zh:'奥斯汀三家直营烘焙咖啡馆，主营长时发酵酸种面包、糕点和咖啡。41% 的销售来自 8,400 位会员。'}],
+         [{en:'Traction',zh:'经营成绩'},{en:'Revenue grew from $1.9M (2023) to $4.87M (TTM). Profitable for six straight quarters, with no debt.',zh:'营收从 2023 年 190 万增长到近12月 487 万。连续六个季度盈利，无负债。'}],
+         [{en:'Unit economics',zh:'单店模型'},{en:'A new store costs ~$550K, reaches $1.6M in sales and pays back in 30–36 months. The two newest broke even in months 7 and 9.',zh:'新店投入约 55 万，年销售 160 万，30–36 个月回本。两家最新门店分别在第 7、9 个月盈亏平衡。'}],
+         [{en:'The plan',zh:'发展计划'},{en:'Seven new stores and one central bakery by 2029. Shared production lowers food cost by about 3 points.',zh:'到 2029 年新开七家店和一个中央烘焙工坊。集中生产可让食材成本下降约 3 个百分点。'}]
+        ].map((x,i)=>`<div><div class="n">0${i+1}</div><h4>${T(x[0])}</h4><p>${T(x[1])}</p></div>`).join('')}
+    </div></div>
+    <div class="card"><div class="hd"><h3>${L('Revenue history','营收历史')}</h3><span class="sub2">$M</span></div>${tractionChart()}<p class="small muted" style="margin-top:8px">${L('2027E is a projection. 2023–2025 are CPA-reviewed.','2027E 为预测，2023–2025 年数据经 CPA 审阅。')}</p></div>
+  </div>
+  ${mapCard()}
+  <div class="grid g2">
+    <div class="card"><div class="hd"><h3>${L('Use of funds','资金用途')}</h3><span class="sub2">$5,000,000</span></div>
+      ${[[L('7 new stores (~$550K each)','7 家新店（每家约 55 万）'),3850000,'#1C2B4A'],[L('Central bakery','中央烘焙工坊'),600000,'#C8892E'],[L('Team & working capital','团队与营运资金'),400000,'#8A97A8'],[L('Contingency','应急储备'),150000,'#C9C1B2']].map(u=>`<div class="cmp" style="margin-bottom:4px"><div class="r" style="grid-template-columns:1fr 90px 46px"><span>${u[0]}</span><b>${money(u[1])}</b><b class="muted" style="font-weight:600">${pct(u[1]/5000000,0)}</b></div><div class="trk"><i style="width:${u[1]/50000}%;background:${u[2]}"></i></div></div>`).join('')}
+      ${(()=>{ const P=pipe().filter(p=>p.s==='soft'||p.s==='funded'); const ex=P.filter(p=>T(p.t).match(/Existing|老股东/)).reduce((a,b)=>a+(+b.a||0),0), nw=P.reduce((a,b)=>a+(+b.a||0),0)-ex, rest=Math.max(0,5000000-ex-nw);
+        return `<div class="hd" style="margin:26px 0 10px"><h3>${L('Who has committed so far','目前已承诺的投资人')}</h3><span class="sub2">${L('non-binding','不具约束力')}</span></div>
+        <div class="stack" style="height:26px"><i style="width:${ex/50000}%;background:#1C2B4A">${ex/5e6>.1?kM(ex):''}</i><i style="width:${nw/50000}%;background:#C8892E">${nw/5e6>.1?kM(nw):''}</i><i style="width:${rest/50000}%;background:#EFEAE0;color:var(--ink-2)">${rest/5e6>.1?kM(rest):''}</i></div>
+        <div class="stackleg"><span><em style="background:#1C2B4A"></em>${L('Existing shareholders','老股东')} ${kM(ex)}</span><span><em style="background:#C8892E"></em>${L('New investors','新投资人')} ${kM(nw)}</span><span><em style="background:#EFEAE0;border:1px solid var(--line)"></em>${L('Still open','尚余额度')} ${kM(rest)}</span></div>
+        <p class="small muted" style="margin-top:10px">${L('Existing shareholders re-investing is usually the strongest signal a private company can show.','老股东追加投资，通常是私营公司能给出的最有力信号。')}</p>`; })()}
+    </div>
+    <div class="card"><div class="hd"><h3>${L('Key risks — and how we manage them','主要风险及应对')}</h3></div>
+      ${[[{en:'Opening 7 stores in 3 years',zh:'三年开七家店'},{en:'Same team that opened stores 2 and 3; one opening at a time; COO has opened 14 stores before.',zh:'由开出 2、3 号店的原班团队执行；一次只开一家；运营长曾开过 14 家店。'}],
+         [{en:'Ingredient inflation',zh:'食材涨价'},{en:'Butter and coffee rose 9% this year. We repriced 3% in October; the central bakery adds buying power.',zh:'今年黄油和咖啡上涨 9%。10 月已提价 3%；中央工坊将提升采购议价能力。'}],
+         [{en:'Hiring skilled bakers',zh:'熟练面包师难招'},{en:'In-house training program; two head bakers promoted from within this year.',zh:'内部培训体系；今年已有两位首席面包师由内部晋升。'}],
+         [{en:'Permit and construction delays',zh:'许可与施工延误'},{en:'7% contingency in the budget; leases negotiated with rent-free build-out periods.',zh:'预算含 7% 应急储备；租约已谈下装修期免租。'}],
+         [{en:'Illiquid investment',zh:'流动性有限'},{en:'Private shares cannot be sold freely. Expect to hold for 5–7 years.',zh:'私营公司股份不能自由买卖，预计持有 5–7 年。'}]
+        ].map(r=>`<div class="risk"><b>${st('watch')} ${T(r[0])}</b><span>${T(r[1])}</span></div>`).join('')}
+    </div>
+  </div>`;
+});
+VIEWS.terms = gated(()=>`<div class="card"><div class="hd"><h3>${L('Series A — summary of terms','A 轮 — 条款摘要')}</h3><span class="chip gold">${L('Draft · subject to final documents','草案 · 以最终文件为准')}</span></div><div class="tblw"><table class="tbl">
+  ${[[L('Security','证券类型'),L('Series A Preferred Stock','A 轮优先股')],[L('Amount','融资金额'),L('Up to $5,000,000','最高 5,000,000 美元')],[L('Pre-money valuation','投前估值'),'$20,000,000'],[L('Price per share','每股价格'),'$1.70'],[L('Minimum investment','最低投资额'),'$50,000'],[L('Liquidation preference','清算优先权'),L('1x non-participating','1 倍，不参与分配')],[L('Pro-rata rights','按比例优先认购权'),L('Existing shareholders first, then investors of $250K+','老股东优先，其次是投资 25 万以上的投资人')],[L('Board','董事会'),L('5 seats: 2 founders, 1 Series A, 2 independent','5 席：2 位创始人、1 席 A 轮代表、2 位独立董事')],[L('Information rights','知情权'),L('Monthly updates, quarterly financials, annual CPA-reviewed statements','月度简报、季度财报、年度 CPA 审阅报表')],[L('Target close','目标截止'),fdate('2027-01-31')]].map(r=>`<tr><td style="width:38%;color:var(--ink-2)">${r[0]}</td><td><b>${r[1]}</b></td></tr>`).join('')}
+  </table></div><div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap"><button class="btn btn-gold" data-act="commit">${L('Indicate interest','表达投资意向')}</button><button class="btn btn-line" data-act="doc" data-name="${esc(L('Series A Term Sheet (draft)','A 轮条款清单（草案）'))}">${ic('file',14)} ${L('Open term sheet','打开条款清单')}</button></div></div>`);
+const SLIDES = () => [
+  {img:'hero', pg:L('01 · Hearth & Grain','01 · Hearth & Grain'), h:L('Bread worth gathering for.','值得为它相聚的面包。'), stats:[['3',L('stores','门店')],['$4.87M',L('TTM revenue','近12月营收')],['8,400',L('members','会员')]]},
+  {pg:L('02 · The opportunity','02 · 机会'), h:L('Austin has great coffee. It does not have a great neighborhood bakery on every street.','奥斯汀不缺好咖啡，缺的是每条街上都有一家好的社区面包店。'), bul:[L('Specialty bakery cafés grow faster than coffee chains in our neighborhoods','在我们的社区，精品烘焙咖啡的增长快于咖啡连锁'),L('Our stores have 20+ minute weekend waits','我们的门店周末排队超过 20 分钟'),L('Ten target neighborhoods mapped, two leases in negotiation','已锁定十个目标社区，两份租约在谈')]},
+  {img:'store', pg:L('03 · Unit economics','03 · 单店模型'), h:L('A store pays back in about three years.','一家店大约三年回本。'), stats:[['$550K',L('build-out','建店成本')],['$1.6M',L('revenue / store','单店营收')],['30–36',L('months payback','个月回本')]]},
+  {pg:L('04 · The plan','04 · 计划'), h:L('From 3 stores to 10 by 2029, with one central bakery.','到 2029 年从 3 家店增长到 10 家，配一个中央烘焙工坊。'), stats:[['6',L('stores 2027','2027 门店')],['8',L('stores 2028','2028 门店')],['10',L('stores 2029','2029 门店')]]},
+  {pg:L('05 · Financial outlook','05 · 财务展望'), h:L('$15.6M revenue and 11% EBITDA margin by 2029.','2029 年营收 1,560 万美元，EBITDA 利润率 11%。'), bul:[L('2027: $8.2M revenue · 7% EBITDA','2027：营收 820 万 · EBITDA 7%'),L('2028: $11.9M revenue · 9% EBITDA','2028：营收 1,190 万 · EBITDA 9%'),L('2029: $15.6M revenue · 11% EBITDA','2029：营收 1,560 万 · EBITDA 11%'),L('Projections — see Risk Factors','以上为预测，见风险披露')]},
+  {img:'team', pg:L('06 · The ask','06 · 融资'), h:L('$5M Series A at a $20M pre-money valuation.','A 轮 500 万美元，投前估值 2,000 万美元。'), bul:[L('Minimum $50K · accredited investors','起投 5 万 · 合格投资人'),L('Existing shareholders invest first','老股东优先认购'),L('Target close January 31, 2027','目标截止 2027年1月31日')]}
+];
+VIEWS.deck = gated(()=>{
+  const sl = SLIDES(), s = sl[S.deck];
+  return `<div class="card"><div class="slide ${s.img?'img':''}" ${s.img?`style="background-image:url('${IMG[s.img]}')"`:''}>
+    <div class="pg">${s.pg}</div><h3>${s.h}</h3>
+    ${s.stats?`<div class="stats">${s.stats.map(x=>`<div><b>${x[0]}</b><span>${x[1]}</span></div>`).join('')}</div>`:''}
+    ${s.bul?`<div class="bul">${s.bul.map(x=>`<div>— ${x}</div>`).join('')}</div>`:''}
+  </div>
+  <div class="deckctl"><button class="btn btn-line btn-sm" data-act="deck" data-d="-1" ${S.deck===0?'disabled':''}>← ${L('Previous','上一页')}</button><div class="dots">${sl.map((x,i)=>`<i class="${i===S.deck?'on':''}"></i>`).join('')}</div><button class="btn btn-navy btn-sm" data-act="deck" data-d="1" ${S.deck===sl.length-1?'disabled':''}>${L('Next','下一页')} →</button></div>
+  <p class="small muted" style="margin-top:14px">${ic('eye',13)} ${L('View-only. Downloads are disabled and every page is watermarked with your name.','仅可在线查看，不能下载原件，每页都带有你的姓名水印。')}</p></div>`;
+});
+VIEWS.fin = gated(()=>`<div class="grid g2" style="margin-bottom:20px">
+  <div class="card"><div class="hd"><h3>${L('Historical','历史数据')}</h3><span class="chip ok">${L('CPA-reviewed','CPA 审阅')}</span></div><div class="tblw"><table class="tbl"><tr><th></th><th class="num">2024</th><th class="num">2025</th><th class="num">${L('TTM Oct-26','近12月')}</th></tr>
+    <tr><td>${L('Stores (year end)','门店数（年末）')}</td><td class="num">3</td><td class="num">3</td><td class="num">3</td></tr>
+    <tr><td>${L('Revenue','营收')}</td><td class="num">$3.10M</td><td class="num">$4.40M</td><td class="num">${kM(TTM*1000)}</td></tr>
+    <tr><td>${L('Gross margin','毛利率')}</td><td class="num">66.2%</td><td class="num">67.4%</td><td class="num">68.2%</td></tr>
+    <tr><td>${L('EBITDA','EBITDA')}</td><td class="num">($64K)</td><td class="num">$198K</td><td class="num">$297K</td></tr>
+    <tr><td>${L('EBITDA margin','EBITDA 利润率')}</td><td class="num down">-2.1%</td><td class="num">4.5%</td><td class="num">6.1%</td></tr></table></div></div>
+  <div class="card"><div class="hd"><h3>${L('Projections','预测')}</h3><span class="chip gold">${L('Estimates','估计')}</span></div><div class="tblw"><table class="tbl"><tr><th></th><th class="num">2027</th><th class="num">2028</th><th class="num">2029</th></tr>
+    <tr><td>${L('Stores (year end)','门店数（年末）')}</td><td class="num">6</td><td class="num">8</td><td class="num">10</td></tr>
+    <tr><td>${L('Revenue','营收')}</td><td class="num">$8.2M</td><td class="num">$11.9M</td><td class="num">$15.6M</td></tr>
+    <tr><td>${L('Gross margin','毛利率')}</td><td class="num">69.0%</td><td class="num">70.5%</td><td class="num">71.0%</td></tr>
+    <tr><td>${L('EBITDA','EBITDA')}</td><td class="num">$574K</td><td class="num">$1.07M</td><td class="num">$1.72M</td></tr>
+    <tr><td>${L('EBITDA margin','EBITDA 利润率')}</td><td class="num">7.0%</td><td class="num">9.0%</td><td class="num">11.0%</td></tr></table></div></div></div>
+  <div class="card"><div class="hd"><h3>${L('Store-level performance (TTM)','单店表现（近12月）')}</h3></div>${storeTable()}</div>
+  <div class="notice" style="margin-top:20px">${ic('shield')} <span>${L('Projections are management estimates, not guarantees. Gross margin here excludes labor. See Risk Factors in Documents.','预测为管理层估计，不构成保证。此处毛利率不含人工。详见"文件"中的风险披露。')}</span></div>`);
+function storeTable(){
+  return `<div class="tblw"><table class="tbl"><tr><th>${L('Store','门店')}</th><th class="num">${L('Opened','开业')}</th><th class="num">${L('Revenue','营收')}</th><th class="num">${L('Tx / day','日均单量')}</th><th class="num">${L('Store margin','门店利润率')}</th></tr>
+  ${STORES.map(s=>`<tr><td><b>${s.n}</b></td><td class="num">${s.y}</td><td class="num">${money(s.rev*1000)}</td><td class="num">${s.tx}</td><td class="num">${pct(s.m)}</td></tr>`).join('')}
+  <tr class="tot"><td>${L('Total','合计')}</td><td></td><td class="num">${money(STORES.reduce((a,b)=>a+b.rev,0)*1000)}</td><td class="num">${Math.round(STORES.reduce((a,b)=>a+b.tx,0)/3)} ${L('avg','均')}</td><td></td></tr></table></div>`;
+}
+VIEWS.pdocs = gated(()=>`<div class="card"><div class="hd"><h3>${L('Data room documents','资料室文件')}</h3><span class="small muted">${L('Watermarked · view-only','带水印 · 仅可查看')}</span></div><div class="list">${DOCS.filter(d=>(DB.get('perm_'+d.id,d.aud)).pr).map(d=>docRow(d)).join('')}</div></div>`);
+VIEWS.pqa = gated(()=> askForm('prqa') + qaPr().slice().reverse().map(threadHtml).join(''));
+VIEWS.call = gated(()=>{
+  const days=[['2026-11-06',['9:30 AM','11:00 AM','2:00 PM']],['2026-11-09',['10:00 AM','1:30 PM','4:00 PM']],['2026-11-10',['9:00 AM','11:30 AM','3:00 PM']]];
+  const booked = DB.get('call',null);
+  return `<div class="card"><div class="hd"><h3>${L('Book a 30-minute call with the founders','预约与创始人 30 分钟通话')}</h3><span class="small muted">${L('Central Time · video call','美国中部时间 · 视频通话')}</span></div>
+  ${booked?`<div class="notice navy">${ic('check')} <span>${L('Booked: ','已预约：')}<b>${esc(booked)}</b>. ${L('A calendar invite would be sent by email in production.','正式使用时会通过邮件发送日历邀请。')}</span></div>`:''}
+  <div class="slots">${days.map(([d,ts])=>`<div class="day"><b>${fdate(d)}</b>${ts.map(t=>{ const v=fdate(d)+' · '+t; return `<button data-act="slot" data-v="${esc(v)}" class="${booked===v?'on':''}">${t}</button>`; }).join('')}</div>`).join('')}</div>
+  <div style="display:flex;gap:16px;align-items:center;margin-top:20px;flex-wrap:wrap"><span class="avatar" style="width:44px;height:44px;font-size:16px">EH</span><span class="small"><b>Emily Hart</b>, CEO · <b>James Okafor</b>, CFO</span></div></div>`;
+});
+
+/* ---------- Shareholder ---------- */
+function actions(){
+  const H = holder(), a = [];
+  if(S.role==='director') a.push({t:L('Sign written consent — FY2027 budget','签署书面决议 — 2027 财年预算'), due:'2026-11-18', done:DB.get('signed',false), href:'#/p/board', btn:L('Sign','签署')});
+  a.push({t:L('Vote on Resolution 2026-03 (Series A)','对决议 2026-03（A 轮）投票'), due:'2026-12-10', done:!!DB.get('vote',null), href:'#/p/meet', btn:L('Vote','投票')});
+  a.push({t:L(`Decide on your Series A allocation (${money(H.proRata)})`,`决定 A 轮认购额度（${money(H.proRata)}）`), due:'2026-12-15', done:DB.get('prorata',false), href:'#/p/holdings', btn:L('Review','查看')});
+  a.push({t:L('RSVP for the annual meeting','回复年度股东会出席'), due:'2026-12-05', done:!!DB.get('rsvp',null), href:'#/p/meet', btn:'RSVP'});
+  a.push({t:L('Read the Q3 2026 report','阅读 2026 三季度报告'), due:null, done:DB.get('readq3',false), href:'#/p/reports', act:'openq3', btn:L('Read','阅读')});
+  return a;
+}
+const daysTo = iso => Math.round((new Date(iso+'T12:00:00') - new Date(TODAY+'T12:00:00'))/864e5);
+VIEWS.overview = ()=>{
+  const isDir = S.role==='director', R = ROLES[S.role], first = R.n.split(' ')[0], H = holder();
+  const acts = actions(), open = acts.filter(a=>!a.done).length, moic = H.val/H.inv;
+  const news = allNews(isDir?'bd':'sh').slice(0,3);
+  return `
+  <div class="pagehd"><div><div class="eyebrow">${L('Wednesday, November 4, 2026','2026年11月4日 · 星期三')}</div><h2>${L('Good afternoon, ','下午好，')}${first}.</h2></div></div>
+  ${sinceStrip()}
+  <div class="summary">
+    <div class="sl"><div class="eyebrow" style="color:#E9C88E">${L('The company in one sentence','一句话看公司')}</div>
+      <p class="big">${L('Revenue is ahead of plan, the business is profitable, and Store #4 is on track to open in February.','营收超过计划，公司持续盈利，4 号店按计划将于 2 月开业。')}</p>
+      <a class="btn btn-gold btn-sm" href="#/p/reports" data-act="openq3">${L('Read the Q3 letter','阅读三季度致股东信')} →</a></div>
+    <div class="sr">${[[L('Revenue vs plan','营收对比计划'),'ok'],[L('Profitability','盈利能力'),'ok'],[L('Store #4 opening','4 号店开业'),'ok'],[L('Food & labor costs','食材与人工成本'),'watch']].map(x=>`<div class="srow"><span>${x[0]}</span>${st(x[1])}</div>`).join('')}</div>
+  </div>
+  <div class="sechd"><h3>${L('Company health','公司健康度')}</h3><span>${L('Hover ? for definitions','点 ? 查看术语解释')}</span></div>
+  <div class="grid g4" style="margin-bottom:28px">
+    ${metric({lbl:L('Revenue · TTM','营收 · 近12月'),tip:'ttm',val:kM(TTM*1000),st:'ok',spark:ACT,delta:[`+${((TTM/TTMP-1)*100).toFixed(1)}%`,'up'],sub:L('vs plan','对比计划')})}
+    ${metric({lbl:L('EBITDA margin','EBITDA 利润率'),tip:'ebitda',val:'7.0%',st:'ok',spark:[5.2,0.9,6.2,7.0],delta:['+0.8 pts','up'],sub:L('Q3 vs Q2','Q3 对比 Q2')})}
+    ${metric({lbl:L('Same-store','同店增长'),tip:'sss',val:'+6.2%',st:'ok',spark:[4.1,4.8,5.1,6.2],delta:['+1.2 pts','up'],sub:L('vs plan','对比计划')})}
+    ${metric({lbl:L('Cash · Sep 30','现金 · 9月30日'),val:'$1.12M',st:'ok',spark:[0.98,1.04,1.08,1.12],delta:['+$40K','up'],sub:L('vs Jun 30 · no debt','对比6月30日 · 无负债')})}
+  </div>
+  <div class="grid g-21" style="margin-bottom:28px">
+    <div class="card"><div class="hd"><h3>${isDir?L('Your stake','你的持股'):L('Your investment','你的投资')}</h3><a class="link" href="#/p/holdings">${L('Holdings →','持股详情 →')}</a></div>
+      <div class="ivrow">
+        <div><div class="lbl">${L('Invested','投入')}</div><div class="numl">${money(H.inv)}</div></div>
+        <div class="arr">→</div>
+        <div><div class="lbl">${L('Value · last round','按上轮估值')}${tip('lastround')}</div><div class="numl navy">${money(H.val)}</div></div>
+        <div><div class="lbl">MOIC${tip('moic')}</div><div class="numl ${moic>1.01?'up':''}">${moic.toFixed(2)}x</div></div>
+      </div>
+      <div class="cmp">
+        <div class="r"><span>${L('Invested','投入')}</span><div class="trk"><i style="width:${H.inv/(H.sh*PRICE.a)*100}%;background:#8A97A8"></i></div><b>${money(H.inv)}</b></div>
+        <div class="r"><span>${L('Last round','上轮')}</span><div class="trk"><i style="width:${H.val/(H.sh*PRICE.a)*100}%;background:#1C2B4A"></i></div><b>${money(H.val)}</b></div>
+        <div class="r"><span>${L('At Series A','A 轮价')}</span><div class="trk"><i style="width:100%;background:repeating-linear-gradient(90deg,#C8892E 0 8px,#E9C88E 8px 12px)"></i></div><b>${money(H.sh*PRICE.a)}</b></div>
+      </div>
+      <div class="metaline"><span>${L('Ownership','持股')} <b>${pct(H.own,2)}</b></span><span>${L('Shares','股数')} <b>${num(H.sh)}</b></span><span>${L('Series A allocation','A 轮认购额度')}${tip('prorata')} <b>${money(H.proRata)}</b></span></div>
+      <a class="btn btn-navy btn-sm" style="margin-top:16px" href="#/p/sim">${ic('sliders',14)} ${L('What could this be worth in 2029?','到 2029 年可能值多少？')} →</a>
+    </div>
+    <div class="card"><div class="hd"><h3>${L('Needs your attention','待你处理')}</h3><span class="sub2">${open ? L(`${open} open`,`${open} 项待办`) : L('All done','全部完成')}</span></div>
+      ${acts.map(a=>{ const d=a.due?daysTo(a.due):null; return `<div class="act ${a.done?'done':''}"><span class="ck">${a.done?ic('check',13):''}</span><div><div class="t">${a.t}</div><div class="m ${d!==null&&d<=14&&!a.done?'soon':''}">${a.done?L('Done','已完成'):a.due?L(`Due ${fdate(a.due)} · ${d} days`,`截止 ${fdate(a.due)} · 还有 ${d} 天`):L('No deadline','无截止日期')}</div></div>${a.done?'':`<a class="btn btn-line btn-sm" href="${a.href}" ${a.act?`data-act="${a.act}"`:''}>${a.btn}</a>`}</div>`; }).join('')}
+    </div>
+  </div>
+  <div class="grid g-21">
+    <div class="card"><div class="hd"><h3>${L('Trends','经营趋势')}</h3><a class="link" href="#/p/perf">${L('Full scorecard →','完整记分卡 →')}</a></div>${trendCard()}<div style="margin-top:18px;padding-top:16px;border-top:1px solid var(--line-2)">${ytdBlock()}</div></div>
+    <div class="card"><div class="hd"><h3>${L('Latest announcements','最新公告')}</h3><a class="link" href="#/p/news">${L('All →','全部 →')}</a></div><div class="list">
+      ${news.map(n=>`<div class="item" style="grid-template-columns:auto 1fr"><span class="dot" style="${DB.get('seen_'+n.id,false)?'background:var(--line)':''}"></span><div><div class="t" style="font-size:14.5px">${esc(T(n.t))}</div><div class="m">${fdate(n.d)} · ${esc(T(n.tag))}</div></div></div>`).join('')}
+    </div></div>
+  </div>
+  ${photoWall()}`;
+};
+VIEWS.holdings = ()=>{
+  const H = holder(), moic = H.val/H.inv, prSh = Math.round(H.proRata/PRICE.a);
+  const o0 = H.own, o1 = H.sh/POST_A, o2 = (H.sh+prSh)/POST_A;
+  const done = DB.get('prorata',false);
+  return `<div class="grid g4" style="margin-bottom:24px">
+    ${metric({lbl:L('Total invested','累计投入'),val:money(H.inv),sub:L(`${H.pos.length} round${H.pos.length>1?'s':''} · since ${H.pos[0].d.slice(0,4)}`,`${H.pos.length} 轮 · 自 ${H.pos[0].d.slice(0,4)} 年`)})}
+    ${metric({lbl:L('Value · last round','按上轮估值'),tip:'lastround',val:money(H.val),sub:L('at $0.85 per share','按每股 0.85 美元'),cls:'feature'})}
+    ${metric({lbl:'MOIC',tip:'moic',val:moic.toFixed(2)+'x',delta:moic>1.01?[`+${money(H.val-H.inv)}`,'up']:null,sub:L('on paper','账面')})}
+    ${metric({lbl:L('Ownership','持股比例'),val:pct(o0,2),sub:`${num(H.sh)} ${L('shares','股')}`})}
+  </div>
+  <div class="grid g-21" style="margin-bottom:24px">
+    <div class="card"><div class="hd"><h3>${L('Value of your investment','你的投资价值变化')}</h3><a class="link" href="#/p/sim">${L('Simulate 2029 →','模拟 2029 →')}</a></div>${valueChart(H)}</div>
+    <div class="card" style="display:flex;flex-direction:column"><div class="hd"><h3>${L('Series A allocation','A 轮认购额度')}</h3>${st(done?'ok':'watch',true).replace(L('On track','达标'),L('Indicated','已表达意向')).replace(L('Watch','需关注'),L('Decide by Dec 15','12月15日前决定'))}</div>
+      <div class="lbl small muted" style="display:flex;gap:6px;align-items:center;font-weight:600;letter-spacing:.08em;text-transform:uppercase">${L('Your pro-rata right','你的按比例优先认购权')}${tip('prorata')}</div>
+      <div class="numl navy" style="font-size:38px;margin:6px 0 4px">${money(H.proRata)}</div>
+      <p class="small muted">${pct(o0,2)} ${L('ownership × $5,000,000 round','持股 × 500 万本轮')} = ${num(prSh)} ${L('new shares at $1.70','股新股，每股 1.70 美元')}</p>
+      <div class="list" style="margin:14px 0 18px">${[[L('If you participate','如果你认购'),pct(o2,2),L('ownership kept','保持持股比例')],[L('If you do not','如果你不认购'),pct(o1,2),L('after dilution','稀释后')]].map(r=>`<div class="item" style="grid-template-columns:1fr auto;padding:10px 0"><span class="small">${r[0]} <span class="muted">· ${r[2]}</span></span><b>${r[1]}</b></div>`).join('')}</div>
+      <button class="btn btn-gold" style="margin-top:auto" data-act="prorata" ${done?'disabled':''}>${done?L('✓ Participation indicated','✓ 已表达认购意向'):L('Indicate participation','表达认购意向')}</button>
+    </div>
+  </div>
+  <div class="card" style="margin-bottom:24px"><div class="hd"><h3>${L('Positions','持仓明细')}</h3><button class="btn btn-line btn-sm" data-act="doc" data-name="${esc(L('Capital Account Statement','资本账户对账单'))}">${ic('file',14)} ${L('Statement','对账单')}</button></div><div class="tblw"><table class="tbl">
+    <tr><th>${L('Round','轮次')}</th><th class="hm">${L('Date','日期')}</th><th class="hm">${L('Class','类别')}</th><th class="num">${L('Invested','投入')}</th><th class="num hm">${L('Price paid','买入价')}</th><th class="num">${L('Shares','股数')}</th><th class="num">${L('Value · last round','按上轮估值')}</th><th class="num">MOIC</th></tr>
+    ${H.pos.map(p=>`<tr><td><b>${T(p.r).split(' ·')[0]}</b></td><td class="hm">${fdate(p.d)}</td><td class="hm">${T(p.type)}</td><td class="num">${money(p.inv)}</td><td class="num hm">${money(p.p,2)}</td><td class="num">${num(p.sh)}</td><td class="num">${money(p.sh*PRICE.angel)}</td><td class="num ${p.sh*PRICE.angel/p.inv>1.01?'up':''}">${(p.sh*PRICE.angel/p.inv).toFixed(2)}x</td></tr>`).join('')}
+    <tr class="tot"><td>${L('Total','合计')}</td><td class="hm"></td><td class="hm"></td><td class="num">${money(H.inv)}</td><td class="hm"></td><td class="num">${num(H.sh)}</td><td class="num">${money(H.val)}</td><td class="num">${moic.toFixed(2)}x</td></tr></table></div>
+    <p class="small muted" style="margin-top:12px">${L('Private shares are illiquid. Values use the last priced round and are not a market price or a guarantee.','私营公司股份流动性有限。价值按最近一轮定价计算，不是市场价格，也不构成保证。')}</p></div>
+  <div class="grid g2">
+    <div class="card"><div class="hd"><h3>${L('What the Series A does to your stake','A 轮对你持股的影响')}</h3>${tip('dilution')}</div><div class="tblw"><table class="tbl">
+      <tr><th></th><th class="num">${L('Today','现在')}</th><th class="num">${L('After A · no','A 轮后 · 不认购')}</th><th class="num">${L('After A · pro-rata','A 轮后 · 认购')}</th></tr>
+      <tr><td>${L('Shares','股数')}</td><td class="num">${num(H.sh)}</td><td class="num">${num(H.sh)}</td><td class="num">${num(H.sh+prSh)}</td></tr>
+      <tr><td>${L('Ownership','持股比例')}</td><td class="num">${pct(o0,2)}</td><td class="num down">${pct(o1,2)}</td><td class="num up">${pct(o2,2)}</td></tr>
+      <tr><td>${L('Value at $1.70','按 1.70 美元计')}</td><td class="num">${money(H.sh*PRICE.a)}</td><td class="num">${money(H.sh*PRICE.a)}</td><td class="num">${money((H.sh+prSh)*PRICE.a)}</td></tr>
+      <tr><td>${L('Additional cash in','追加投入')}</td><td class="num">—</td><td class="num">—</td><td class="num">${money(H.proRata)}</td></tr></table></div>
+      <p class="small muted" style="margin-top:12px">${L('Your percentage goes down, but the company gets $5M bigger — the value of your existing shares at the Series A price does not change.','你的比例会下降，但公司多了 500 万资金、整体变大 —— 按 A 轮价格计算，你现有股份的价值不变。')}</p></div>
+    <div class="card"><div class="hd"><h3>${L('Who owns the company','公司股权结构')}</h3></div>
+      ${(()=>{ const seg=(arr,tot)=>`<div class="stack">${arr.map(s=>`<i style="width:${s[1]/tot*100}%;background:${s[2]}">${s[1]/tot>.09?pct(s[1]/tot,1):''}</i>`).join('')}</div>`;
+        const base=[[L('Founders & team','创始人与团队'),8000000,'#1C2B4A'],[L('Friends & Family','亲友轮'),2000000,'#C8892E'],[L('Angel','天使轮'),1764706,'#8A97A8']];
+        return `<div class="small" style="font-weight:600">${L('Today','现在')}</div>${seg(base,SHARES_OUT)}<div class="small" style="font-weight:600;margin-top:16px">${L('After the Series A','A 轮完成后')}</div>${seg(base.concat([[L('Series A','A 轮'),A_SHARES,'#4F7A5A']]),POST_A)}
+        <div class="stackleg">${base.concat([[L('Series A investors','A 轮投资人'),0,'#4F7A5A']]).map(s=>`<span><em style="background:${s[2]}"></em>${s[0]}</span>`).join('')}</div>`; })()}
+      <p class="small muted" style="margin-top:14px">${L('Total shares: 11,764,706 today → 14,705,882 after the Series A.','总股本：现在 11,764,706 股 → A 轮后 14,705,882 股。')}</p></div>
+  </div>`;
+};
+const SCORE = [
+  {m:{en:'Revenue',zh:'营收'}, q3:'$1.23M', q2:'$1.23M', pl:'$1.21M', v:'+2.1%', good:true, s:'ok'},
+  {m:{en:'Same-store sales growth',zh:'同店销售增长'}, k:'sss', q3:'+6.2%', q2:'+5.1%', pl:'+5.0%', v:'+1.2 pts', good:true, s:'ok'},
+  {m:{en:'Average ticket',zh:'客单价'}, q3:'$14.20', q2:'$14.05', pl:'$14.00', v:'+$0.20', good:true, s:'ok'},
+  {m:{en:'Food & packaging cost',zh:'食材与包装成本'}, k:'cogs', q3:'31.5%', q2:'32.0%', pl:'31.0%', v:'+0.5 pts', good:false, s:'watch', why:{en:'Butter and coffee up 9%; prices raised 3% in October',zh:'黄油和咖啡涨价 9%；10 月已提价 3%'}},
+  {m:{en:'Labor % of revenue',zh:'人工占比'}, k:'labor', q3:'32.9%', q2:'33.4%', pl:'32.0%', v:'+0.9 pts', good:false, s:'watch', why:{en:'Overtime while replacing two bakers at Mueller',zh:'Mueller 店补招两位面包师期间的加班费'}},
+  {m:{en:'EBITDA margin',zh:'EBITDA 利润率'}, k:'ebitda', q3:'7.0%', q2:'6.2%', pl:'6.5%', v:'+0.5 pts', good:true, s:'ok'},
+  {m:{en:'Loyalty members',zh:'会员数'}, q3:'8,400', q2:'7,950', pl:'8,000', v:'+400', good:true, s:'ok'},
+  {m:{en:'Cash on hand',zh:'现金余额'}, q3:'$1.12M', q2:'$1.08M', pl:'$1.05M', v:'+$70K', good:true, s:'ok'}
+];
+VIEWS.perf = ()=>{
+  const tab = S.perfTab;
+  const head = `<div class="tabs">${[['ops',L('Scorecard','记分卡')],['trends',L('Trends','趋势')],['stores',L('Stores & map','门店与地图')],['exp',L('Expansion','扩张进度')]].map(t=>`<button class="${tab===t[0]?'on':''}" data-act="perf" data-t="${t[0]}">${t[1]}</button>`).join('')}</div>`;
+  if(tab==='ops'){
+    const ok = SCORE.filter(x=>x.s==='ok').length;
+    return head + `<div class="card" style="margin-bottom:24px"><div class="hd"><h3>${L('Q3 2026 scorecard','2026 年第三季度记分卡')}</h3><span class="sub2">${L('Quarter ended Sep 30, 2026','截至 2026年9月30日的季度')}</span></div>
+      <div class="scoresum">${st('ok',true)} <b>${ok} ${L('of','/')} ${SCORE.length}</b> ${L('metrics on track','项指标达标')} <span class="muted">·</span> ${st('watch',true)} <b>${SCORE.length-ok}</b> ${L('to watch: food and labor costs','项需关注：食材与人工成本')}</div>
+      <div class="tblw"><table class="tbl score"><tr><th>${L('Metric','指标')}</th><th class="num">Q3 2026</th><th class="num hm">Q2 2026</th><th class="num hm">${L('Q3 plan','Q3 计划')}</th><th class="num">${L('vs plan','对比计划')}</th><th>${L('Status','状态')}</th></tr>
+      ${SCORE.map(r=>`<tr><td>${T(r.m)} ${r.k?tip(r.k):''}${r.why?`<span class="why">${T(r.why)}</span>`:''}</td><td class="num"><b>${r.q3}</b></td><td class="num muted hm">${r.q2}</td><td class="num muted hm">${r.pl}</td><td class="num ${r.good?'good-t':'bad-t'}">${r.v}</td><td>${st(r.s)}</td></tr>`).join('')}
+      </table></div></div>
+      <div class="grid g-21">
+        <div class="card">${flowCard()}</div>
+        <div class="grid" style="align-content:start">
+          <div class="card">${ytdBlock()}</div>
+          <div class="card"><div class="hd"><h3>${L('Explaining the misses','未达标月份说明')}</h3></div><div class="list">
+            ${[[L('March','3 月'),'−8.4%',L('Oven failure closed Mueller for 4 days. Fixed under warranty; service contracts now cover all stores.','Mueller 店烤炉故障停业 4 天。保修维修；现已为所有门店签订维护合同。')],[L('January','1 月'),'−2.4%',L('Ice storm closed two stores for a day and a half.','冰暴导致两家门店停业一天半。')],[L('June','6 月'),'−1.7%',L('Heat wave; afternoon traffic down. Iced menu expanded in July.','热浪导致下午客流减少。7 月已扩充冰饮菜单。')]].map(r=>`<div class="item" style="grid-template-columns:62px 1fr;align-items:start;padding:11px 0"><div><b style="font-size:13.5px">${r[0]}</b><div class="down small" style="font-weight:700">${r[1]}</div></div><span class="small" style="color:var(--ink-2)">${r[2]}</span></div>`).join('')}
+          </div></div>
+        </div>
+      </div>`;
+  }
+  if(tab==='trends') return head + `<div class="card" style="margin-bottom:24px"><div class="hd"><h3>${L('Explore the numbers','自己探索数据')}</h3><span class="sub2">${L('Pick a metric and a period · hover for detail','选指标和时间段 · 悬停查看明细')}</span></div>${trendCard()}</div>
+    <div class="grid g2" style="margin-bottom:24px"><div class="card">${mixCard()}</div><div class="card">${memCard()}</div></div>
+    <div class="card">${heatCard()}</div>`;
+  if(tab==='stores') return head + mapCard() + `<div class="grid g3" style="margin-bottom:24px">${STORES.map((s,i)=>{ const stt = s.m>=.1?'ok':'watch';
+      return `<div class="card scard"><div class="top"><div><h4>${s.n}</h4><div class="small muted">${L('Opened','开业')} ${s.y} · ${2026-s.y<=2?L('ramping','爬坡期'):L('mature','成熟期')}</div></div>${i===2?`<span class="st pill" style="background:var(--info-soft);color:var(--navy)"><i style="background:var(--navy)"></i>${L('Ramping','爬坡中')}</span>`:st(stt,true)}</div>
+      <div><div class="lbl small muted" style="text-transform:uppercase;letter-spacing:.08em;font-weight:600">${L('Revenue · TTM','营收 · 近12月')}</div><div class="numl navy">${money(s.rev*1000)}</div></div>
+      <div class="cmp" style="margin:0"><div class="r" style="grid-template-columns:96px 1fr 52px"><span>${L('Store margin','门店利润率')}</span><div class="trk"><i style="width:${s.m/.16*100}%;background:${s.m>=.1?'#4F7A5A':'#C8892E'}"></i></div><b>${pct(s.m)}</b></div></div>
+      <div class="mini"><div><b>${s.tx}</b><span>${L('Tx / day','日均单')}</span></div><div><b>$${(s.rev*1000/365/s.tx).toFixed(2)}</b><span>${L('Ticket','客单')}</span></div><div><b>${pct(s.rev/TTM,0)}</b><span>${L('Of sales','销售占比')}</span></div></div></div>`; }).join('')}</div>
+    <div class="card"><div class="hd"><h3>${L('Why the newest store matters','为什么最新门店是关键')}</h3></div><p style="color:var(--ink-2);max-width:760px">${L('The Domain store opened in 2024 and is following the same curve as Mueller did a year earlier: breakeven in month 9, 8.1% store margin in year two. If it keeps tracking, the new-store model in the Series A plan holds.','Domain 店 2024 年开业，走势与一年前的 Mueller 店相同：第 9 个月盈亏平衡，第二年门店利润率 8.1%。只要继续保持，A 轮计划中的新店模型就站得住。')}</p></div>`;
+  return head + `<div class="grid g-21" style="margin-bottom:20px">
+      <div class="card" style="padding:0;overflow:hidden"><img src="${IMG.build}" alt="${L('Store #4 under construction','建设中的 4 号店')}" style="width:100%;aspect-ratio:16/8;object-fit:cover"><div style="padding:24px">
+        <div class="hd" style="margin-bottom:10px"><h3>${L('Store #4 · East Austin','4 号店 · 东奥斯汀')}</h3>${st('ok',true)}</div>
+        <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px"><span>${L('Construction progress','施工进度')}</span><b>65%</b></div><div class="bar"><i style="width:65%"></i></div>
+        <div class="list" style="margin-top:12px">${[[1,L('Lease signed','签订租约'),'2026-05-20'],[1,L('Permits approved','许可证获批'),'2026-07-14'],[1,L('Framing & kitchen rough-in','框架与厨房管线'),'2026-10-08'],[0,L('Ovens delivered','烤炉进场'),'2026-12-10'],[0,L('Hiring & training','招聘与培训'),'2027-01-15'],[0,L('Grand opening','正式开业'),'2027-02-06']].map(m=>`<div class="item" style="grid-template-columns:auto 1fr auto;padding:10px 0"><span class="fileic" style="width:30px;height:30px;${m[0]?'background:var(--ok-soft);color:var(--ok)':''}">${m[0]?ic('check',15):ic('cal',15)}</span><span style="font-size:14px;${m[0]?'':'color:var(--ink-2)'}">${m[1]}</span><span class="small muted">${fdate(m[2])}</span></div>`).join('')}</div></div></div>
+      <div class="grid" style="align-content:start">
+        ${metric({lbl:L('Store #4 budget','4 号店预算'),val:'$550K',st:'ok',sub:L('$362K spent · 66% at 65% complete','已支出 36.2 万 · 完工 65% 时花费 66%')})}
+        <div class="card"><div class="hd"><h3>${L('Store #5 · Round Rock','5 号店 · Round Rock')}</h3><span class="chip">${L('Q3 2027','2027 Q3')}</span></div><p class="small muted">${L('Lease approved by the board on Sep 16. Design starts in January.','董事会已于 9 月 16 日批准租约，1 月开始设计。')}</p></div>
+        <div class="card"><div class="hd"><h3>${L('Road to 10 stores','十店路线图')}</h3></div>${[['2026',3],['2027',6],['2028',8],['2029',10]].map(r=>`<div style="display:grid;grid-template-columns:48px 1fr 24px;gap:10px;align-items:center;margin-bottom:10px;font-size:13.5px"><span class="muted">${r[0]}</span><div class="bar navy"><i style="width:${r[1]*10}%"></i></div><b>${r[1]}</b></div>`).join('')}</div>
+      </div></div>`;
+};
+VIEWS.reports = ()=>{
+  if(S.report==='q3') return q3Report();
+  return `<div class="card"><div class="hd"><h3>${L('Reports','报告')}</h3><span class="small muted">${L('Monthly updates · quarterly reports · annual reports','月度简报 · 季度报告 · 年度报告')}</span></div><div class="list">
+  ${REPORTS.map(r=>`<div class="item"><span class="fileic">${ic('report')}</span><div><div class="t">${T(r.t)} ${r.id==='q3'&&!DB.get('readq3',false)?'<span class="chip gold" style="margin-left:6px">'+L('New','新')+'</span>':''}</div><div class="m">${T(r.k)} · ${fdate(r.d)}</div></div><button class="btn ${r.full?'btn-navy':'btn-line'} btn-sm" data-act="report" data-r="${r.id}">${L('Open','打开')}</button></div>`).join('')}
+  </div></div>`;
+};
+function q3Report(){
+  const q = QTRS.map(x=>Object.assign({},x,{gp:x.rev-x.cogs, eb:x.rev-x.cogs-x.lab-x.occ-x.oth}));
+  return `<button class="btn btn-line btn-sm" data-act="report" data-r="" style="margin-bottom:18px">← ${L('All reports','全部报告')}</button>
+  <div class="grid g-21">
+    <div class="card"><div class="eyebrow">${L('Quarterly report · published Oct 28, 2026','季度报告 · 2026年10月28日发布')}</div><h2 class="serif" style="font-size:38px;margin:10px 0 20px">${L('Q3 2026: steady quarter, fourth store on track','2026 年第三季度：稳健的一季，4 号店按计划推进')}</h2>
+      <div class="letter">
+        <p>${L('Dear shareholders,','各位股东：')}</p>
+        <p>${L('Q3 revenue was $1.23M, 2.1% above plan, and EBITDA margin reached 7.0%, our best quarter so far. Here is what went right, and what did not.','第三季度营收 123 万美元，比计划高 2.1%；EBITDA 利润率达到 7.0%，是目前最好的一个季度。下面是做得好的地方，也有做得不好的地方。')}</p>
+        <div class="wl"><div class="w"><b class="up">${L('What went right','做得好的')}</b><ul><li>${L('Same-store sales +6.2% YoY','同店销售同比 +6.2%')}</li><li>${L('Domain store reached 8.1% store margin in its second year','Domain 店第二年门店利润率达到 8.1%')}</li><li>${L('Store #4 construction on budget','4 号店施工在预算内')}</li></ul></div>
+        <div class="l"><b class="down">${L('What did not','做得不好的')}</b><ul><li>${L('Butter and coffee costs up 9% — we raised prices 3% in October','黄油和咖啡成本上涨 9%，10 月已提价 3%')}</li><li>${L('Two key bakers left the Mueller store','Mueller 店两位核心面包师离职')}</li><li>${L('Catering pilot paused: margins too thin','外烩试点暂停：利润太薄')}</li></ul></div></div>
+        <h4>${L('Outlook for Q4','第四季度展望')}</h4>
+        <p>${L('December is our biggest month. We expect Q4 revenue of about $1.30M, Store #4 ovens in place by mid-December, and the first Series A closing in January.','12 月是全年最旺的月份。预计第四季度营收约 130 万美元，4 号店烤炉 12 月中旬到位，A 轮首次交割在 1 月。')}</p>
+        <p>${L('As always, ask me anything in the portal. Every answer is shared with all of you.','和往常一样，有任何问题都可以在门户里问我，每个回答都会分享给所有人。')}</p>
+        <div class="sign">Emily Hart</div><div class="small muted">${L('Founder & CEO','创始人兼 CEO')}</div>
+      </div></div>
+    <div class="grid" style="align-content:start">
+      ${kpi(L('Q3 revenue','三季度营收'),'$1.23M',`<span class="up">+2.1%</span> ${L('vs plan','对比计划')}`)}
+      ${kpi(L('Q3 EBITDA','三季度 EBITDA'),'$86K',L('7.0% margin','利润率 7.0%'))}
+      ${kpi(L('Cash · Sep 30','现金 · 9月30日'),'$1.12M',`<span class="up">+$40K</span> ${L('QoQ','环比')}`)}
+      <div class="notice navy" style="margin:0">${ic('eye')} <span>${L('Marked as read. The company can see that you opened this report, so nobody needs to chase you.','已标记为已读。公司能看到你打开了这份报告，不用再一个个追问。')}</span></div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:20px"><div class="hd"><h3>${L('Income statement · 2026 ($K)','损益表 · 2026（千美元）')}</h3><span class="chip ok">${L('Unaudited · prepared by CFO','未经审计 · 财务长编制')}</span></div><div class="tblw"><table class="tbl">
+    <tr><th></th>${q.map(x=>`<th class="num">${x.q}</th>`).join('')}</tr>
+    <tr><td>${L('Revenue','营收')}</td>${q.map(x=>`<td class="num">${num(x.rev)}</td>`).join('')}</tr>
+    <tr><td>${L('Cost of goods','销售成本')}</td>${q.map(x=>`<td class="num">(${num(x.cogs)})</td>`).join('')}</tr>
+    <tr class="tot"><td>${L('Gross profit','毛利')}</td>${q.map(x=>`<td class="num">${num(x.gp)} <span class="muted small">${pct(x.gp/x.rev)}</span></td>`).join('')}</tr>
+    <tr><td>${L('Labor','人工')}</td>${q.map(x=>`<td class="num">(${num(x.lab)})</td>`).join('')}</tr>
+    <tr><td>${L('Occupancy','租金物业')}</td>${q.map(x=>`<td class="num">(${num(x.occ)})</td>`).join('')}</tr>
+    <tr><td>${L('Other operating','其他经营费用')}</td>${q.map(x=>`<td class="num">(${num(x.oth)})</td>`).join('')}</tr>
+    <tr class="tot"><td>EBITDA</td>${q.map(x=>`<td class="num ${x.eb/x.rev<.02?'down':''}">${num(x.eb)} <span class="muted small">${pct(x.eb/x.rev)}</span></td>`).join('')}</tr>
+    <tr><td>${L('Cash, end of quarter','季末现金')}</td>${q.map(x=>`<td class="num">${num(x.cash)}</td>`).join('')}</tr>
+  </table></div></div>`;
+}
+VIEWS.news = ()=> `<div class="list" style="gap:16px;display:grid">${allNews(S.role==='director'?'bd':'sh').map(n=>`<article class="card ${n.img?'newsimg':''}" style="${n.img?'padding:0;overflow:hidden;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr)':''}">
+  ${n.img?`<div style="background:url('${IMG[n.img]}') center/cover;min-height:180px"></div>`:''}
+  <div style="${n.img?'padding:24px':''}"><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="chip ${n.mine?'gold':'navy'}">${esc(T(n.tag))}</span><span class="small muted">${fdate(n.d)}</span>${n.mine?`<span class="small muted">· ${L('just published by admin','管理员刚刚发布')}</span>`:''}</div>
+  <h3 style="font-size:26px;margin:10px 0 8px">${esc(T(n.t))}</h3><p class="muted" style="color:var(--ink-2)">${esc(T(n.b))}</p></div></article>`).join('')}</div>`;
+VIEWS.qa = ()=> askForm('shqa') + qaSh().slice().reverse().map(threadHtml).join('');
+VIEWS.docs = ()=>{
+  const k = S.role==='director'?'bd':'sh';
+  return `<div class="card"><div class="hd"><h3>${L('Documents','文件')}</h3><span class="small muted">${ic('shield',13)} ${L('Every file is watermarked with your name','每份文件都带有你的姓名水印')}</span></div><div class="list">${DOCS.filter(d=>(DB.get('perm_'+d.id,d.aud))[k]).map(d=>docRow(d)).join('')}</div></div>`;
+};
+VIEWS.meet = ()=>{
+  const v = DB.get('vote',null), rsvp = DB.get('rsvp',null);
+  const base = {for:.582, against:.041, abstain:.017}; const mine = MY.own;
+  const t = {for:base.for+(v==='for'?mine:0), against:base.against+(v==='against'?mine:0), abstain:base.abstain+(v==='abstain'?mine:0)};
+  const cast = t.for+t.against+t.abstain;
+  return `<div class="grid g2">
+    <div class="card"><div class="hd"><h3>${L('2026 Annual Shareholder Meeting','2026 年度股东大会')}</h3><span class="chip navy">${L('Upcoming','即将召开')}</span></div>
+      <div class="serif" style="font-size:34px;font-weight:600;color:var(--navy)">${L('Saturday, Dec 12','12月12日 周六')}</div>
+      <p class="muted" style="margin:4px 0 16px">${L('6:00 PM Central · Zoom, or in person at South Congress','美中时间 18:00 · Zoom 线上，或到南国会街店现场')}</p>
+      <div class="list" style="margin-bottom:18px">${[L('2026 results and 2027 budget','2026 业绩与 2027 预算'),L('Series A update','A 轮进展'),L('Store #4 tour (in person)','4 号店参观（现场）'),L('Open Q&A','自由问答')].map((a,i)=>`<div class="item" style="grid-template-columns:28px 1fr;padding:9px 0"><span class="serif" style="color:var(--gold);font-size:20px">${i+1}</span><span style="font-size:14px">${a}</span></div>`).join('')}</div>
+      <div class="vopts" style="margin-top:0">${[['zoom',L('Join on Zoom','线上参加')],['person',L('Attend in person','现场参加')],['no',L('Can’t attend','无法参加')]].map(o=>`<button data-act="rsvp" data-v="${o[0]}" class="${rsvp===o[0]?'on':''}">${o[1]}</button>`).join('')}</div>
+      ${rsvp?`<p class="small up" style="margin-top:10px">${ic('check',13)} ${L('RSVP saved. A reminder will be sent the day before.','已回复，会议前一天会发送提醒。')}</p>`:''}
+    </div>
+    <div class="card"><div class="hd"><h3>${L('Resolution 2026-03','决议 2026-03')}</h3><span class="chip gold">${L('Voting closes Dec 10','12月10日截止')}</span></div>
+      <p style="font-weight:600;font-size:16px">${L('Approve the Series A financing of up to $5,000,000 on the terms in the draft term sheet.','按条款清单草案的条款，批准最高 500 万美元的 A 轮融资。')}</p>
+      <p class="small muted" style="margin-top:6px">${L('Votes are weighted by shares. Your vote: ','按持股数加权投票。你的票数：')}${num(S.role==='director'?117647:MY.sh)} ${L('shares','股')}</p>
+      <div class="vopts">${[['for',L('For','赞成')],['against',L('Against','反对')],['abstain',L('Abstain','弃权')]].map(o=>`<button data-act="vote" data-v="${o[0]}" class="${v===o[0]?'on':''}">${o[1]}</button>`).join('')}</div>
+      <div class="tally">${[['for',L('For','赞成'),'ok'],['against',L('Against','反对'),''],['abstain',L('Abstain','弃权'),'navy']].map(o=>`<div class="r"><span>${o[1]}</span><div class="bar ${o[2]}"><i style="width:${t[o[0]]*100}%;${o[0]==='against'?'background:var(--bad)':''}"></i></div><b>${pct(t[o[0]])}</b></div>`).join('')}</div>
+      <p class="small muted" style="margin-top:12px">${L('Shares voted so far: ','目前已投票股份：')}${pct(cast)} · ${L('passes with a majority of outstanding shares','需超过总股本半数赞成')}</p>
+      ${v?`<p class="small up" style="margin-top:6px">${ic('check',13)} ${L('Your vote is recorded. You can change it until voting closes.','你的投票已记录，截止前可以修改。')}</p>`:''}
+    </div>
+  </div>
+  <div class="card" style="margin-top:20px"><div class="hd"><h3>${L('Past meetings','往期会议')}</h3></div><div class="list">
+    ${[[L('2025 Annual Shareholder Meeting','2025 年度股东大会'),'2025-12-13'],[L('Special meeting · Angel round','临时股东会 · 天使轮'),'2024-05-22']].map(m=>`<div class="item"><span class="fileic">${ic('play')}</span><div><div class="t">${m[0]}</div><div class="m">${fdate(m[1])} · ${L('Recording, slides & minutes','录像、幻灯片和纪要')}</div></div><button class="btn btn-line btn-sm" data-act="rec">${L('Watch','观看')}</button></div>`).join('')}
+  </div></div>`;
+};
+VIEWS.board = ()=>{
+  const signed = DB.get('signed',false);
+  return `<div class="notice red">${ic('lock')} <span><b>${L('Confidential.','保密。')}</b> ${L('Only the three directors can see this area. Shareholders cannot.','只有三位董事能看到这个区域，股东看不到。')}</span></div>
+  <div class="grid g-21" style="margin-bottom:20px">
+    <div class="card" style="padding:0;overflow:hidden"><img src="${IMG.team}" alt="" style="width:100%;aspect-ratio:16/7;object-fit:cover"><div style="padding:24px">
+      <div class="hd" style="margin-bottom:8px"><h3>${L('Next board meeting','下次董事会')}</h3><span class="chip navy">${fdate('2026-11-18')} · 4:00 PM CT</span></div>
+      <div class="list">${[L('Q3 financial review','三季度财务回顾'),L('Series A: pipeline and closing plan','A 轮：意向进展与交割计划'),L('FY2027 operating budget (vote)','2027 财年经营预算（表决）'),L('Store #4 opening readiness','4 号店开业准备'),L('CEO report & executive session','CEO 报告与闭门会议')].map((a,i)=>`<div class="item" style="grid-template-columns:28px 1fr;padding:9px 0"><span class="serif" style="color:var(--gold);font-size:20px">${i+1}</span><span style="font-size:14px">${a}</span></div>`).join('')}</div></div></div>
+    <div class="card"><div class="hd"><h3>${L('Board members','董事会成员')}</h3></div><div class="list">
+      ${[['EH','Emily Hart',L('Chair · CEO','董事长 · CEO')],['RL','Robert Lin',L('Investor director','投资人董事')],['GP','Grace Park',L('Independent director','独立董事')]].map(p=>`<div class="item" style="grid-template-columns:auto 1fr"><span class="avatar" style="width:40px;height:40px;font-size:15px">${p[0]}</span><div><div class="t">${p[1]}</div><div class="m">${p[2]}</div></div></div>`).join('')}
+    </div></div>
+  </div>
+  <div class="grid g2">
+    <div class="card"><div class="hd"><h3>${L('Board materials','董事会材料')}</h3></div><div class="list">${BOARDDOCS.map(d=>docRow(d)).join('')}</div></div>
+    <div class="card"><div class="hd"><h3>${L('Resolutions','决议记录')}</h3></div><div class="list">
+      ${RESOS.map(r=>{ const pend = r.st==='pending' && !signed; const n = r.st==='pending' ? (signed?3:2) : r.signed;
+        return `<div class="item"><span class="fileic" style="${pend?'':'background:var(--ok-soft);color:var(--ok)'}">${pend?ic('gavel',16):ic('check',16)}</span><div><div class="t" style="font-size:14px">${T(r.t)}</div><div class="m">${r.id} · ${fdate(r.d)} · ${n}/3 ${L('signed','已签')}</div></div>${pend?`<button class="btn btn-gold btn-sm" data-act="sign">${L('Sign consent','签署')}</button>`:`<span class="chip ok">${L('Approved','已通过')}</span>`}</div>`; }).join('')}
+    </div></div>
+  </div>`;
+};
+
+/* ---------- Admin ---------- */
+VIEWS.dash = ()=>{
+  const st = softTotal(), oq = openQs().length, rc = readCount();
+  const newPipe = pipe().filter(p=>p.fresh).length;
+  return `<div class="grid g4" style="margin-bottom:20px">
+    ${kpi(L('Shareholders','股东人数'),'61',L('across 2 closed rounds','2 轮已完成融资'))}
+    ${kpi(L('Capital raised','已融资金'),'$2.30M',L('F&F $800K · Angel $1.5M','亲友轮 80 万 · 天使轮 150 万'))}
+    ${kpi(L('Series A soft-committed','A 轮意向承诺'),kM(st),`${pct(st/5000000,0)} ${L('of $5M','/ 500 万目标')}`,'feature')}
+    ${kpi(L('Q3 report opened','三季报阅读率'),`${rc}/61`,pct(rc/61,0))}
+  </div>
+  <div class="grid g2">
+    <div class="card"><div class="hd"><h3>${L('Needs your attention','需要处理')}</h3></div><div class="list">
+      ${[[oq,L('open questions','个待回答问题'),'inbox',L('Answer','去回答')],[61-rc,L('shareholders have not opened the Q3 report','位股东尚未打开三季报'),'reads',L('Remind','去提醒')],[pipe().filter(p=>p.s==='interested').length,L('new investor leads to review','个新的投资意向待处理')+(newPipe?` (${newPipe} ${L('from the website','来自网站')})`:''),'pipeline',L('Review','去处理')],[1,L('board consent awaiting signature (FY2027 budget)','项董事会决议待签署（2027 预算）'),'dash','']].map(x=>`<div class="item"><span class="serif" style="font-size:30px;font-weight:600;color:var(--gold);min-width:36px">${x[0]}</span><div class="t" style="font-weight:500;font-size:14.5px">${x[1]}</div>${x[3]?`<a class="btn btn-line btn-sm" href="#/p/${x[2]}">${x[3]}</a>`:'<span></span>'}</div>`).join('')}
+    </div></div>
+    <div class="card"><div class="hd"><h3>${L('Revenue · plan vs actual','营收 · 计划对比实际')}</h3><span class="chip ok">${ic('check',12)} ${L('Synced from POS · today 6:00 AM','已从 POS 同步 · 今天 6:00')}</span></div>${barChart()}</div>
+  </div>`;
+};
+VIEWS.registry = ()=> `<div class="card"><div class="hd"><h3>${L('Shareholder registry','股东名册')}</h3><div style="display:flex;gap:8px;flex-wrap:wrap"><span class="chip">${num(SHARES_OUT)} ${L('shares outstanding','总股本')}</span><button class="btn btn-line btn-sm" data-act="export">${L('Export CSV','导出 CSV')}</button></div></div><div class="tblw"><table class="tbl">
+  <tr><th>${L('Holder','股东')}</th><th>${L('Type','类型')}</th><th>${L('Round','轮次')}</th><th class="num">${L('Shares','股数')}</th><th class="num">${L('Ownership','持股')}</th><th class="num">${L('Invested','投入')}</th><th>${L('Portal','门户')}</th></tr>
+  ${REGISTRY.map(r=>`<tr class="${r.you?'you':''}"><td><b>${r.n}</b></td><td class="small">${T(r.g)}</td><td class="small">${r.r}</td><td class="num">${num(r.sh)}</td><td class="num">${pct(r.sh/SHARES_OUT,2)}</td><td class="num">${r.inv?money(r.inv):'—'}</td><td>${r.r==='Founding'&&!r.n.includes('Hart')&&!r.n.includes('Ramirez')?'<span class="chip">'+L('n/a','不适用')+'</span>':'<span class="chip ok">'+L('Active','已开通')+'</span>'}</td></tr>`).join('')}
+  </table></div><p class="small muted" style="margin-top:12px">${L('Showing 11 of 61 holders. Other holders: ','显示 61 位股东中的 11 位。其余股东合计：')}${num(SHARES_OUT-REGISTRY.reduce((a,b)=>a+b.sh,0))} ${L('shares','股')} (${pct((SHARES_OUT-REGISTRY.reduce((a,b)=>a+b.sh,0))/SHARES_OUT)}).</p></div>`;
+VIEWS.rounds = ()=> `<div class="card" style="margin-bottom:20px"><div class="hd"><h3>${L('Funding history','融资历史')}</h3></div><div class="tblw"><table class="tbl">
+  <tr><th>${L('Round','轮次')}</th><th>${L('Date','日期')}</th><th class="num">${L('Amount','金额')}</th><th class="num">${L('Price / share','每股价格')}</th><th class="num">${L('Post-money','投后估值')}</th><th class="num">${L('Investors','投资人数')}</th><th>${L('Status','状态')}</th></tr>
+  ${ROUNDS.map(r=>`<tr><td><b>${T(r.n)}</b></td><td>${fdate(r.d)}</td><td class="num">${money(r.amt)}</td><td class="num">${money(r.p,2)}</td><td class="num">${money(r.post)}</td><td class="num">${r.inv||'—'}</td><td>${r.st==='open'?`<span class="chip gold">${L('Open · closes','进行中 · 截止')} ${fdate(r.d)}</span>`:`<span class="chip ok">${L('Closed','已完成')}</span>`}</td></tr>`).join('')}
+  </table></div></div>
+  <div class="grid g3">${kpi(L('Price growth since F&F','自亲友轮以来股价涨幅'),'4.25x','$0.40 → $1.70')}${kpi(L('Valuation (post-money)','估值（投后）'),'$4M → $25M',L('3 rounds','3 轮'))}${kpi(L('Founder ownership after A','A 轮后创始团队持股'),'54.4%',L('from 68.0% today','当前 68.0%'))}</div>`;
+VIEWS.pipeline = ()=>{
+  const P = pipe();
+  return `<div class="grid g4" style="margin-bottom:20px">${STAGES.map(s=>{ const it=P.filter(p=>p.s===s.k); return kpi(T(s.l), it.length, it.reduce((a,b)=>a+(+b.a||0),0)?kM(it.reduce((a,b)=>a+(+b.a||0),0)):'—'); }).slice(0,4).join('')}</div>
+  <div class="kanban">${STAGES.map((s,si)=>{ const it=P.filter(p=>p.s===s.k);
+    return `<div class="col"><h4>${T(s.l)} <span>${it.length}</span></h4>${it.map(p=>`<div class="kc ${p.fresh?'new':''}"><b>${esc(p.n)}</b><span class="small muted">${esc(T(p.t))}${p.fresh?' · '+L('website lead','网站线索'):''}</span><div class="row"><span class="amt">${p.a?kM(p.a):'—'}</span>${si<STAGES.length-1?`<button data-act="advance" data-id="${p.id}">${L('Move','推进')} →</button>`:''}</div></div>`).join('') || `<p class="small muted" style="padding:6px">${s.k==='funded'?L('First closing planned for January 2027','首次交割计划在 2027 年 1 月'):L('Empty','暂无')}</p>`}</div>`; }).join('')}</div>`;
+};
+VIEWS.publish = ()=> `<div class="grid g-21"><form class="card" data-form="publish"><div class="hd"><h3>${L('Publish an update','发布更新')}</h3></div>
+  <div class="field"><label>${L('Title','标题')}</label><input name="t" required maxlength="120" placeholder="${L('e.g. October sales came in 2.6% above plan','例如：10 月销售比计划高 2.6%')}"></div>
+  <div class="field"><label>${L('Message','内容')}</label><textarea name="b" rows="6" required maxlength="2000" placeholder="${L('Write it the way you would say it at the shareholder meeting.','用你在股东会上说话的方式写。')}"></textarea></div>
+  <div class="grid g2" style="gap:14px"><div class="field"><label>${L('Audience','可见范围')}</label><select name="aud"><option value="sh">${L('All shareholders & directors','全体股东与董事')}</option><option value="bd">${L('Board only','仅董事会')}</option></select></div>
+  <div class="field"><label>${L('Category','类别')}</label><select name="tag"><option>${L('Update','动态')}</option><option>${L('Report','报告')}</option><option>${L('Expansion','扩张')}</option><option>${L('Governance','治理')}</option></select></div></div>
+  <label class="check"><input type="checkbox" name="email" checked> <span>${L('Also send an email and push notification','同时发送邮件和推送通知')}</span></label>
+  <button class="btn btn-navy">${ic('send',14)} ${L('Publish','发布')}</button></form>
+  <div class="card"><div class="hd"><h3>${L('Recently published','最近发布')}</h3></div><div class="list">${posts().concat(NEWS0).slice(0,6).map(n=>`<div class="item" style="grid-template-columns:1fr auto"><div><div class="t" style="font-size:14px">${esc(T(n.t))}</div><div class="m">${fdate(n.d)} · ${n.aud==='bd'?L('Board only','仅董事会'):L('All shareholders','全体股东')}</div></div>${n.mine?`<span class="chip gold">${L('New','新')}</span>`:''}</div>`).join('')}</div>
+  <p class="small muted" style="margin-top:10px">${L('Tip: publish something, then switch to Shareholder to see it appear.','提示：发布一条，再切换到"股东"身份查看效果。')}</p></div></div>`;
+VIEWS.inbox = ()=>{
+  const all = qaSh().map(q=>Object.assign({k:'sh'},q)).concat(qaPr().map(q=>Object.assign({k:'pr'},q)));
+  const open = all.filter(q=>!q.a), done = all.filter(q=>q.a);
+  return `<div class="card" style="margin-bottom:20px"><div class="hd"><h3>${L('Open questions','待回答')} · ${open.length}</h3><span class="small muted">${L('Target: reply within 48 hours','目标：48 小时内回复')}</span></div>
+  ${open.length?open.map(q=>`<form class="thread" data-form="reply" data-id="${q.id}"><div class="q">${esc(T(q.q))}</div><div class="meta"><span>${esc(q.by)}</span><span>${fdate(q.d)}</span><span class="chip ${q.k==='pr'?'gold':'navy'}">${q.k==='pr'?L('Prospect','意向投资人'):L('Shareholder','股东')}</span></div>
+    <div class="grid replyg" style="grid-template-columns:200px 1fr;gap:12px;margin-top:14px"><div class="field" style="margin:0"><label>${L('Owner','负责人')}</label><select name="who">${OWNERS.map(o=>`<option value="${o.n}" ${o.n===q.who?'selected':''}>${o.n} · ${T(o.r)}</option>`).join('')}</select></div>
+    <div class="field" style="margin:0"><label>${L('Answer (shared with everyone in this audience)','回答（对该范围内所有人可见）')}</label><textarea name="a" rows="2" required maxlength="1500"></textarea></div></div>
+    <div style="text-align:right;margin-top:10px"><button class="btn btn-navy btn-sm">${L('Send answer','发送回答')}</button></div></form>`).join(''):`<p class="muted">${L('All caught up.','全部处理完毕。')}</p>`}</div>
+  <div class="card"><div class="hd"><h3>${L('Answered','已回答')} · ${done.length}</h3></div><div class="list">${done.map(q=>`<div class="item" style="grid-template-columns:auto 1fr auto"><span class="fileic" style="background:var(--ok-soft);color:var(--ok)">${ic('check',16)}</span><div><div class="t" style="font-size:14px">${esc(T(q.q))}</div><div class="m">${esc(q.by)} · ${L('answered by','回答人')} ${q.who}</div></div><span class="chip">${q.k==='pr'?L('Prospect','意向投资人'):L('Shareholder','股东')}</span></div>`).join('')}</div></div>`;
+};
+VIEWS.perms = ()=>{
+  const cols = [['pub',L('Public','公开')],['pr',L('Prospects','意向投资人')],['sh',L('Shareholders','股东')],['bd',L('Board','董事会')]];
+  return `<div class="notice navy">${ic('lock')} <span>${L('Decide who can open each file. Changes apply instantly — try turning a document on for Prospects, then sign in as a prospective investor.','设置每份文件谁能打开，修改即时生效。试着对"意向投资人"开放一份文件，再以意向投资人身份登录查看。')}</span></div>
+  <div class="card"><div class="tblw"><table class="tbl perm"><tr><th>${L('Document','文件')}</th>${cols.map(c=>`<th style="text-align:center">${c[1]}</th>`).join('')}</tr>
+  ${DOCS.map(d=>{ const a=DB.get('perm_'+d.id,d.aud); return `<tr><td><b style="font-weight:600">${T(d.n)}</b><div class="small muted">${d.k} · ${fdate(d.d)}</div></td>${cols.map(c=>`<td class="c"><button class="tog ${a[c[0]]?'on':''}" data-act="perm" data-id="${d.id}" data-c="${c[0]}" aria-label="${T(d.n)} ${c[1]}"></button></td>`).join('')}</tr>`; }).join('')}
+  </table></div></div>`;
+};
+VIEWS.reads = ()=>{
+  const rc = readCount(), unread = UNREAD_SAMPLE.slice(0, 61-rc > UNREAD_SAMPLE.length ? UNREAD_SAMPLE.length : 61-rc);
+  const reminded = DB.get('reminded',false);
+  return `<div class="grid g3" style="margin-bottom:20px">${kpi(L('Q3 report','三季报'),pct(rc/61,0),`${rc} ${L('of 61 opened','/ 61 人已打开')}`,'feature')}${kpi(L('Q2 report','二季报'),'89%',L('54 of 61','54 / 61 人'))}${kpi(L('Avg. time to open','平均打开时间'),L('1.6 days','1.6 天'),L('after publishing','发布后'))}</div>
+  <div class="grid g2">
+    <div class="card"><div class="hd"><h3>${L('Q3 2026 Quarterly Report','2026 年第三季度报告')}</h3><span class="small muted">${L('Published Oct 28','10月28日发布')}</span></div>
+      <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px"><span>${L('Opened','已打开')}</span><b>${rc} / 61</b></div><div class="bar ok"><i style="width:${rc/61*100}%"></i></div>
+      ${DB.get('readq3',false)?`<p class="small up" style="margin-top:12px">${ic('check',13)} ${L('Daniel Chen opened it just now.','Daniel Chen 刚刚打开了报告。')}</p>`:''}
+      <div class="list" style="margin-top:14px">${[[L('Opened on day 1','第 1 天打开'),31],[L('Opened within a week','一周内打开'),12],[L('Opened later','之后打开'),rc-43]].map(r=>`<div class="item" style="grid-template-columns:1fr auto;padding:10px 0"><span style="font-size:14px">${r[0]}</span><b>${r[1]}</b></div>`).join('')}</div></div>
+    <div class="card"><div class="hd"><h3>${L('Not opened yet','尚未打开')} · ${61-rc}</h3><button class="btn btn-gold btn-sm" data-act="remind" ${reminded?'disabled':''}>${reminded?L('✓ Reminder sent','✓ 已发送提醒'):L('Send reminder','发送提醒')}</button></div>
+      <div class="list">${unread.map(n=>`<div class="item" style="grid-template-columns:auto 1fr auto;padding:9px 0"><span class="avatar" style="width:32px;height:32px;font-size:12px;background:var(--sand);color:var(--navy)">${n.split(' ').map(x=>x[0]).join('')}</span><span style="font-size:14px">${n}</span><span class="small muted">${reminded?L('reminded','已提醒'):''}</span></div>`).join('')}</div>
+      ${61-rc>unread.length?`<p class="small muted" style="margin-top:8px">+${61-rc-unread.length} ${L('more','人')}</p>`:''}</div>
+  </div>`;
+};
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+const app = document.getElementById('app');
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove('show'),2600); }
+function modal(html){ const m=document.getElementById('modal'); m.innerHTML=`<div class="ov" data-act="close"><div class="modal" role="dialog" aria-modal="true"><button class="x" data-act="close" aria-label="Close">×</button>${html}</div></div>`; }
+function rerender(){ route(); }
+
+document.addEventListener('click', e=>{
+  if(e.target.closest('.side nav a')) S.report = null;
+  if(document.body.classList.contains('nav-open') && !e.target.closest('.side') && !e.target.closest('[data-act="menu"]')) document.body.classList.remove('nav-open');
+  const el = e.target.closest('[data-act]'); if(!el) return;
+  const a = el.dataset.act;
+  if(a==='close'){ if(e.target===el || el.classList.contains('x')) document.getElementById('modal').innerHTML=''; return; }
+  if(a==='anchor'){ e.preventDefault(); const t=document.getElementById(el.dataset.to); if(t) t.scrollIntoView({behavior:'smooth'}); return; }
+  if(a==='lang'){ S.lang = S.lang==='en'?'zh':'en'; DB.set('lang',S.lang); document.documentElement.lang = S.lang==='zh'?'zh-CN':'en'; const y=window.scrollY; rerender(); window.scrollTo(0,y); return; }
+  if(a==='menu'){ document.body.classList.toggle('nav-open'); return; }
+  if(a==='role'){ const r=el.dataset.role; S.role=r; DB.set('role',r); S.report=null; S.deck=0; location.hash = r==='visitor' ? '#/' : '#/p/'+NAV[r][0][0]; return; }
+  if(a==='logout'){ S.role=null; DB.set('role',null); return; }
+  if(a==='reset'){ e.preventDefault(); const l=S.lang; DB.clear(); DB.set('lang',l); S.role=null; S.report=null; toast(L('Demo data reset','演示数据已重置')); rerender(); return; }
+  if(a==='tip'){ e.preventDefault(); e.stopPropagation(); const g=GLOSS[el.dataset.k]; if(g) modal(`<div class="gloss"><div class="eyebrow">${L('Plain-English glossary','白话术语解释')}</div><h3>${T(g.t)}</h3><p style="color:var(--ink-2);font-size:15.5px">${T(g.d)}</p>${g.ex?`<div class="ex"><b>${L('Example','举例')}:</b> ${T(g.ex)}</div>`:''}</div>`); return; }
+  if(a==='perf'){ S.perfTab=el.dataset.t; rerender(); return; }
+  if(a==='perftab'){ S.perfTab=el.dataset.t; if(location.hash==='#/p/perf'){ e.preventDefault(); rerender(); } return; }
+  if(a==='metric'){ S.metric=el.dataset.m; el.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===el)); drawTrend(); return; }
+  if(a==='range'){ S.range=el.dataset.r; el.parentNode.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===el)); drawTrend(); return; }
+  if(a==='pin'){ S.pin=el.dataset.id||null; const ms=document.getElementById('mapsvg'), pi=document.getElementById('pin-info'); if(ms) ms.innerHTML=mapSvg(); if(pi) pi.innerHTML=pinInfo(S.pin); return; }
+  if(a==='preset'){ const cur=simState(); DB.set('sim', Object.assign(cur, PRESETS[el.dataset.p])); const v=simState(); ['stores','rps','mult'].forEach(k=>{ const i=document.getElementById('sim-'+k); if(i) i.value=v[k]; }); updateSim(); return; }
+  if(a==='photo'){ const p=PHOTOS[+el.dataset.i]; modal(`<div class="lightbox"><div class="eyebrow">${fdate(p.d)}</div><h3>${esc(T(p.t))}</h3><img src="${IMG[p.img]}" alt="${esc(T(p.t))}"></div>`); return; }
+  if(a==='deck'){ S.deck=Math.max(0,Math.min(SLIDES().length-1,S.deck+(+el.dataset.d))); rerender(); return; }
+  if(a==='report' || a==='openq3'){ const r = a==='openq3' ? 'q3' : el.dataset.r;
+    if(r && r!=='q3'){ const rep=REPORTS.find(x=>x.id===r); modal(`<div class="eyebrow">${T(rep.k)} · ${fdate(rep.d)}</div><h3>${T(rep.t)}</h3><p class="muted">${L('Archived report. In this demo only the Q3 2026 report opens in full.','往期报告。本演示中只有 2026 年第三季度报告可以完整打开。')}</p><div class="docprev">${docLines()}${wm()}</div>`); return; }
+    S.report = r||null; if(r==='q3') DB.set('readq3',true); if(a==='openq3'){ e.preventDefault(); location.hash='#/p/reports'; } rerender(); window.scrollTo(0,0); return; }
+  if(a==='doc'){ const n=el.dataset.name; modal(`<div class="eyebrow">${L('Secure viewer','安全查看器')}</div><h3>${esc(n)}</h3><p class="small muted">${L('View-only · watermarked · access is logged','仅可查看 · 带水印 · 访问会被记录')}</p><div class="docprev">${docLines()}${wm()}</div>`); return; }
+  if(a==='vote'){ DB.set('vote',el.dataset.v); toast(L('Vote recorded','投票已记录')); rerender(); return; }
+  if(a==='rsvp'){ DB.set('rsvp',el.dataset.v); rerender(); return; }
+  if(a==='rec'){ modal(`<div class="eyebrow">${L('Meeting recording','会议录像')}</div><h3>${L('2025 Annual Shareholder Meeting','2025 年度股东大会')}</h3><div class="slide img" style="background-image:url('${IMG.team}');margin-top:16px;align-items:center;justify-content:center"><span style="width:72px;height:72px;border-radius:50%;background:var(--gold);display:grid;place-items:center">${ic('play',30)}</span></div><p class="small muted" style="margin-top:12px">${L('Demo placeholder — in production the recording, slides and minutes are attached here.','演示占位：正式使用时，这里会附上录像、幻灯片和会议纪要。')}</p>`); return; }
+  if(a==='sign'){ DB.set('signed',true); toast(L('Written consent signed · 3 of 3 — resolution approved','书面决议已签署 · 3/3 — 决议通过')); rerender(); return; }
+  if(a==='prorata'){ DB.set('prorata',true); const P=pipe(); const me=P.find(p=>p.id==='p8'); if(me) me.s='soft'; DB.set('pipe',P); toast(L('Participation indicated — the CFO has been notified','已表达认购意向，财务长已收到通知')); rerender(); return; }
+  if(a==='commit'){ const me=pipe().find(p=>p.id==='p10');
+    modal(`<div class="eyebrow">${L('Non-binding indication','不具约束力的意向')}</div><h3>${L('How much are you considering?','你考虑投资多少？')}</h3><p class="muted" style="margin-bottom:18px">${L('This only helps the company plan the round. Nothing is charged and nothing is signed here.','这只用于帮助公司规划本轮融资。这里不收任何款项，也不签任何文件。')}</p>
+    <form data-form="commit"><div class="field"><label>${L('Amount (USD, minimum $50,000)','金额（美元，最低 50,000）')}</label><input name="amt" type="number" min="50000" step="5000" required value="${me&&me.a?me.a:100000}"></div><button class="btn btn-gold">${L('Submit indication','提交意向')}</button></form>`); return; }
+  if(a==='slot'){ DB.set('call',el.dataset.v); toast(L('Call booked','通话已预约')); rerender(); return; }
+  if(a==='advance'){ const P=pipe(); const p=P.find(x=>x.id===el.dataset.id); const i=STAGES.findIndex(s=>s.k===p.s); if(i<STAGES.length-1){ p.s=STAGES[i+1].k; p.fresh=false; if(p.s==='soft'&&!p.a) p.a=100000; } DB.set('pipe',P); rerender(); return; }
+  if(a==='perm'){ const d=DOCS.find(x=>x.id===el.dataset.id); const cur=Object.assign({},DB.get('perm_'+d.id,d.aud)); cur[el.dataset.c]=!cur[el.dataset.c]; DB.set('perm_'+d.id,cur); el.classList.toggle('on'); toast(L('Access updated','权限已更新')); return; }
+  if(a==='remind'){ DB.set('reminded',true); toast(L(`Reminder sent to ${61-readCount()} shareholders`,`已向 ${61-readCount()} 位股东发送提醒`)); rerender(); return; }
+  if(a==='export'){ toast(L('In production this downloads the registry as CSV','正式使用时会下载 CSV 格式的股东名册')); return; }
+});
+const docLines = () => Array.from({length:12},(_,i)=>`<div class="ln" style="width:${[92,100,86,97,64,100,90,78,100,95,70,40][i]}%;${i===0?'height:18px;width:55%;background:#D6CDBB;margin-bottom:22px':''}"></div>`).join('');
+const wm = () => { const n = S.role && ROLES[S.role].n ? ROLES[S.role].n : 'Visitor'; return `<div class="wm">${Array.from({length:30},()=>`<span>${n} · ${L('CONFIDENTIAL','保密')} · ${TODAY}</span>`).join('')}</div>`; };
+
+document.addEventListener('submit', e=>{
+  const f = e.target.closest('[data-form]'); if(!f) return;
+  e.preventDefault();
+  const k = f.dataset.form, fd = new FormData(f);
+  if(k==='interest'){
+    if(fd.get('website')) return; // honeypot
+    const last = DB.get('lastsub',0); if(Date.now()-last<5000){ toast(L('Please wait a moment before submitting again','请稍候再提交')); return; }
+    DB.set('lastsub',Date.now());
+    const name = String(fd.get('name')).trim().slice(0,80);
+    const P = pipe(); P.push({id:'w'+Date.now(), n:name, t:{en:String(fd.get('type')),zh:String(fd.get('type'))}, a:0, s:'interested', fresh:true}); DB.set('pipe',P);
+    DB.set('pubread',name); renderPublic(); document.getElementById('interest').scrollIntoView(); toast(L('Interest registered','意向已登记')); return;
+  }
+  if(k==='gate'){ DB.set('gate',true); rerender(); return; }
+  if(k==='commit'){ const amt=Math.max(50000,+fd.get('amt')||0); const P=pipe(); const me=P.find(p=>p.id==='p10'); me.a=amt; me.s='soft'; DB.set('pipe',P); document.getElementById('modal').innerHTML=''; toast(L('Indication received — thank you','意向已收到，谢谢')); rerender(); return; }
+  if(k==='shqa' || k==='prqa'){
+    const q = String(fd.get('q')).trim().slice(0,500); if(!q) return;
+    const fin = /revenue|cost|margin|cash|price|valuation|dividend|tax|营收|成本|利润|现金|估值|税|价格/i.test(q);
+    const store = /store|open|lease|bake|menu|staff|门店|开业|租|面包|员工/i.test(q);
+    const o = fin?OWNERS[0]:store?OWNERS[2]:OWNERS[1];
+    const R = ROLES[S.role];
+    const list = DB.get(k==='shqa'?'myqa':'prqa',[]);
+    list.push({id:(k==='shqa'?'u':'v')+Date.now(), by:R.n, d:TODAY, aud:k==='shqa'?'sh':'pr', q:{en:q,zh:q}, who:o.n, role:o.r, due:48, a:null});
+    DB.set(k==='shqa'?'myqa':'prqa',list);
+    toast(L(`Sent to ${o.n} (${T(o.r)}) — reply within 48h`,`已发送给 ${o.n}（${T(o.r)}），48 小时内回复`)); rerender(); return;
+  }
+  if(k==='publish'){
+    const t=String(fd.get('t')).trim(), b=String(fd.get('b')).trim(); if(!t||!b) return;
+    const P = posts(); P.unshift({id:'m'+Date.now(), d:TODAY, tag:{en:String(fd.get('tag')),zh:String(fd.get('tag'))}, aud:fd.get('aud'), t:{en:t,zh:t}, b:{en:b,zh:b}, mine:true}); DB.set('posts',P);
+    toast(fd.get('email')?L('Published · email & push sent to 61 shareholders','已发布 · 已向 61 位股东发送邮件和推送'):L('Published','已发布')); rerender(); return;
+  }
+  if(k==='reply'){
+    const id=f.dataset.id, a=String(fd.get('a')).trim(), who=String(fd.get('who')); if(!a) return;
+    const o = OWNERS.find(x=>x.n===who);
+    DB.set('reply_'+id, {a:{en:a,zh:a}, who:o.n, role:o.r, ad:TODAY});
+    toast(L('Answer sent and shared','回答已发送并共享')); rerender(); return;
+  }
+});
+
+document.addEventListener('input', e=>{
+  const k = e.target.dataset && e.target.dataset.sim; if(!k) return;
+  const cur = simState(); cur[k] = k==='part' ? e.target.checked : parseFloat(e.target.value); DB.set('sim', cur); updateSim();
+});
+document.addEventListener('keydown', e=>{
+  if((e.key==='Enter'||e.key===' ') && e.target.classList && e.target.classList.contains('pin')){ e.preventDefault(); e.target.dispatchEvent(new MouseEvent('click',{bubbles:true})); return; } if(e.key==='Escape'){ document.getElementById('modal').innerHTML=''; document.body.classList.remove('nav-open'); } });
+document.documentElement.lang = S.lang==='zh'?'zh-CN':'en';
+route();
+</script>
+</body>
+</html>
